@@ -1,6 +1,8 @@
 import 'package:csm_system/features/generate_qr/screens/generate_qr_screen.dart';
 import 'package:csm_system/features/menu/screens/menu_screen.dart';
 import 'package:csm_system/features/notification/screens/notification_screen.dart';
+import 'package:csm_system/features/scan_qr/screens/qr_scanner.dart';
+import 'package:csm_system/features/settings/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
 
@@ -45,13 +47,13 @@ class _BottomBarState extends State<BottomBar> {
       case 'Settings':
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const ProfileScreen()),
+          MaterialPageRoute(builder: (context) => const SettingsScreen()),
         );
         break;
       case 'QrScanner':
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const ProfileScreen()),
+          MaterialPageRoute(builder: (context) => const QrScanner()),
         );
         break;
       case 'LogOut':

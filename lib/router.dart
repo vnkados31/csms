@@ -1,6 +1,8 @@
 import 'package:csm_system/features/generate_qr/screens/generate_qr_screen.dart';
 import 'package:csm_system/features/notification/screens/notification_screen.dart';
 import 'package:csm_system/features/profile/screens/profile_screen.dart';
+import 'package:csm_system/features/scan_qr/screens/qr_scanner.dart';
+import 'package:csm_system/features/settings/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'common/widgets/bottom_bar.dart';
@@ -40,6 +42,18 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       );
 
     case ProfileScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const ProfileScreen(),
+      );
+
+    case SettingsScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const ProfileScreen(),
+      );
+
+    case QrScanner.routeName:
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const ProfileScreen(),
