@@ -40,6 +40,8 @@ dependencies:
   http: ^1.1.0
   badges: ^2.0.2
   intl: ^0.17.0
+  qr_flutter: ^4.1.0
+  qr_scanner_overlay: ^0.0.2
 
 dev_dependencies:
   flutter_test:
