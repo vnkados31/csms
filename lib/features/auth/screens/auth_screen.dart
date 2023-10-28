@@ -30,18 +30,19 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _nameController.dispose();
+    _psNumberController.dispose();
+    dateInput.dispose();
   }
 
   void signUpUser() {
     authService.signUpUser(
         context: context,
         email: _emailController.text,
-        ps_number: _psNumberController.text,
+        psNumber: double.parse(_psNumberController.text),
         name: _nameController.text,
         dob: dateInput.text);
   }
@@ -49,7 +50,7 @@ class _AuthScreenState extends State<AuthScreen> {
   void signInUser() {
     authService.signInUser(
         context: context,
-        ps_number: _psNumberController.text,
+        psNumber: double.parse(_psNumberController.text),
         password: _passwordController.text);
   }
 
@@ -117,13 +118,13 @@ class _AuthScreenState extends State<AuthScreen> {
                           height: 10,
                         ),
                         Container(
-                          padding: EdgeInsets.all(15),
+                          padding: const EdgeInsets.all(15),
                           height: MediaQuery.of(context).size.width / 3,
                           child: Center(
                             child: TextField(
                               controller: dateInput,
                               //editing controller of this TextField
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                   icon: Icon(Icons
                                       .calendar_today), //icon of text field
                                   labelText: "Enter Date" //label text of field

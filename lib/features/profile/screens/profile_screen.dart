@@ -47,7 +47,7 @@ class ProfileScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
               ),
               Text(
-                user.ps_number,
+                user.psNumber.toString(),
                 style: const TextStyle(fontSize: 35),
               ),
               const SizedBox(
@@ -64,7 +64,7 @@ class ProfileScreen extends StatelessWidget {
                     shape: const StadiumBorder(),
                   ),
                   child: Text(
-                    user.coupons_left,
+                    user.couponsLeft.toString(),
                     style: const TextStyle(color: Colors.black, fontSize: 40),
                   ),
                 ),
@@ -87,7 +87,7 @@ class ProfileScreen extends StatelessWidget {
                     shape: const StadiumBorder(),
                   ),
                   child: Text(
-                    user.food_type,
+                    user.foodType,
                     style: const TextStyle(color: Colors.black, fontSize: 40),
                   ),
                 ),

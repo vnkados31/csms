@@ -84,7 +84,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 const SizedBox(height: 16),
                                 // Add some space between the name and ID
                                 Text(
-                                  'PS No.: ${user.ps_number}',
+                                  'PS No.: ${user.psNumber}',
                                   style: const TextStyle(fontSize: 25),
                                 ),
                               ],
@@ -99,7 +99,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     // Add padding to all ListTile items
                     child: ListTile(
                       onTap: () {
-                        _showAlertDialog(context, user.food_type, user.email);
+                        _showAlertDialog(context, user.foodType, user.email);
                       },
                       shape: RoundedRectangleBorder(
                         side: const BorderSide(width: 2),

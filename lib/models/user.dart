@@ -4,11 +4,11 @@ class User {
   final String id;
   final String name;
   final String email;
-  final String ps_number;
+  final double psNumber;
   final String password;
-  final String coupons_left;
-  final String food_type;
-  final String user_type;
+  final double couponsLeft;
+  final String foodType;
+  final String userType;
   final String dob;
   final String token;
 
@@ -16,12 +16,12 @@ class User {
       {required this.id,
       required this.name,
       required this.email,
-      required this.ps_number,
+      required this.psNumber,
       required this.password,
       required this.dob,
-      required this.coupons_left,
-      required this.food_type,
-      required this.user_type,
+      required this.couponsLeft,
+      required this.foodType,
+      required this.userType,
       required this.token});
 
   Map<String, dynamic> toMap() {
@@ -29,12 +29,12 @@ class User {
       'id': id,
       'name': name,
       'email': email,
-      'ps_number': ps_number,
+      'psNumber': psNumber,
       'password': password,
       'dob': dob,
-      'coupons_left': coupons_left,
-      'food_type': food_type,
-      'user_type': user_type,
+      'coupons_left': couponsLeft,
+      'food_type': foodType,
+      'user_type': userType,
       'token': token,
     };
   }
@@ -44,12 +44,12 @@ class User {
       id: map['_id'] ?? '',
       name: map['name'] ?? '',
       email: map['email'] ?? '',
-      ps_number: map['ps_number'] ?? '',
+      psNumber: map['psNumber']?.toDouble() ?? 0.0,
       password: map['password'] ?? '',
       dob: map['dob'] ?? '',
-      coupons_left: map['coupons_left'] ?? '',
-      food_type: map['food_type'] ?? '',
-      user_type: map['user_type'] ?? '',
+      couponsLeft: map['couponsLeft']?.toDouble() ?? 0.0,
+      foodType: map['foodType'] ?? '',
+      userType: map['userType'] ?? '',
       token: map['token'] ?? '',
     );
   }

@@ -19,9 +19,9 @@ const userSchema = mongoose.Schema({
             }
         }
     },
-    ps_number : {
+    psNumber : {
         require : true,
-        type : String,
+        type : Number,
         trim : true,
         
     },
@@ -29,18 +29,18 @@ const userSchema = mongoose.Schema({
         require : true,
         type : String,
     },
-    food_type : {
+    foodType : {
         type : String,
         default : 'Veg',
 
     },
-    user_type : {
+    userType : {
         type : String,
         default : 'user',
 
     },
-    coupons_left : {
-        type: String,
+    couponsLeft : {
+        type: Number,
         default : '25'
     },
     password : {

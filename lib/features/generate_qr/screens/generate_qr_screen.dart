@@ -32,15 +32,17 @@ class _GenerateQrScreenState extends State<GenerateQrScreen> {
   late bool nonVegData = false;
   late bool dietData = false;
 
-  void assingningData() {
+  void assingningData(double psNumber,double couponsLeft) {
     setState(() {
       dataToSend.clear();
       dataToSend.add(name);
       dataToSend.add(email);
+      dataToSend.add(psNumber);
       dataToSend.add(vegUsers);
       dataToSend.add(nonVegUsers);
       dataToSend.add(dietUsers);
       dataToSend.add(totalUsers);
+      dataToSend.add(couponsLeft);
     });
   }
 
@@ -191,7 +193,7 @@ class _GenerateQrScreenState extends State<GenerateQrScreen> {
                   SizedBox(height: screenHeight * 0.05),
                   ElevatedButton.icon(
                     onPressed: () async {
-                      assingningData();
+                      assingningData(user.psNumber,user.couponsLeft);
 
                       Navigator.push(
                         context,

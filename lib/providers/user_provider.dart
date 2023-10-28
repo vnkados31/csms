@@ -7,12 +7,12 @@ class UserProvider extends ChangeNotifier {
     id: '',
     name: '',
     email: '',
-    ps_number: '',
+    psNumber: 0.0,
     password: '',
     dob: '',
-    coupons_left: '',
-    food_type: '',
-    user_type: '',
+    couponsLeft: 0.0,
+    foodType: '',
+    userType: '',
     token: '',
   );
 

@@ -26,8 +26,8 @@ function generatePassword(name, dob) {
 authRouter.post("/api/signup", async function (req,res) {
 
     try {
-        const {name,email,ps_number,dob} = req.body;
-        const existingUser = await User.findOne({ps_number});
+        const {name,email,psNumber,dob} = req.body;
+        const existingUser = await User.findOne({psNumber});
 
         if(existingUser) {
             return res.status(400).json({msg: 'User with same PS Number already exists!'});
@@ -43,7 +43,7 @@ authRouter.post("/api/signup", async function (req,res) {
             name,
             email,
             password : hashedPassword,
-            ps_number,
+            psNumber,
             dob
         });
 
@@ -61,9 +61,9 @@ authRouter.post("/api/signup", async function (req,res) {
 
 authRouter.post('/api/signin',async (req,res) => {
     try {
-        const {ps_number,password} = req.body;
+        const {psNumber,password} = req.body;
 
-        const user =await User.findOne({ps_number});
+        const user =await User.findOne({psNumber});
         if(!user){
             return res.status(400).json({msg : "User with this PS Number does not exist!"});
         }

@@ -18,7 +18,7 @@ class AuthService {
     required BuildContext context,
     required String email,
     required String name,
-    required String ps_number,
+    required double psNumber,
     required String dob,
   }) async {
     try {
@@ -35,12 +35,12 @@ class AuthService {
           id: '',
           name: name,
           email: email,
-          ps_number: ps_number,
+          psNumber: psNumber,
           password: '',
           dob: dob,
-          coupons_left: '',
-          food_type: '',
-          user_type: '',
+          couponsLeft: 0.0,
+          foodType: '',
+          userType: '',
           token: '');
 
       http.Response res = await http.post(Uri.parse('$uri/api/signup'),
@@ -65,12 +65,12 @@ class AuthService {
 
   void signInUser(
       {required BuildContext context,
-      required String ps_number,
+      required double psNumber,
       required String password}) async {
     try {
       http.Response res = await http.post(Uri.parse('$uri/api/signin'),
           body: jsonEncode({
-            'ps_number': ps_number,
+            'psNumber': psNumber,
             'password': password,
           }),
           headers: <String, String>{
