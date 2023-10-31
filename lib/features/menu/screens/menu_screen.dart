@@ -154,9 +154,10 @@ class _MenuScreenState extends State<MenuScreen> {
               height: 10,
             ),
             (menuItems == null)
-                ? const Loader()
+                ? const Center(child: const Loader())
                 : ListView.builder(
                     itemCount: menuItems!.length,
+                    shrinkWrap: true,
                     itemBuilder: (context, index) {
                       final menuItemData = menuItems![index];
                       return Card(
@@ -206,7 +207,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                   child: ListTile(
                                     onTap: () {
                                       Navigator.pop(context);
-                                      //showMyDialog(title, list[index]['id'].toString(),dropdownValue);
+                                      //  showMyDialog(title, list[index]['id'].toString(),dropdownValue);
                                     },
                                     leading: const Icon(Icons.edit),
                                     title: const Text('Edit'),
@@ -216,7 +217,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                   child: ListTile(
                                     onTap: () {
                                       Navigator.pop(context);
-                                      // ref.child(list[index]['id'].toString()).remove();
+                                      //   ref.child(list[index]['id'].toString()).remove();
                                     },
                                     leading: const Icon(Icons.delete),
                                     title: const Text('Delete'),
