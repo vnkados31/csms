@@ -3,6 +3,7 @@ const adminRouter = express.Router();
 const admin = require("../middlewares/admin");
 const { Qrcode } = require("../models/qrcode");
 const { PromiseProvider } = require("mongoose");
+const { MenuItem } = require("../models/menuitem");
 
 // Add product
 adminRouter.post("/admin/scan-qr", async (req, res) => {
@@ -48,6 +49,61 @@ adminRouter.post('/admin/delete-scanned-user', admin , async (req,res) => {
     } catch (e) {
         res.status(500).json({error : e.message});
     }
-})
+});
+
+adminRouter.post('/admin/add-menu-item', admin, async (req,res) => {
+      try {
+
+        const { name , day,type} = req.body;
+        let menuitem = new MenuItem (
+          {
+            name : name,
+            day : day,
+            type : type
+
+          }
+        );
+
+        menuitem = await menuitem.save(); 
+        res.json(menuitem);
+      } catch (e) {
+        res.status(500).json({ error: e.message });
+      }
+});
+
+adminRouter.get("/admin/get-menu-items", admin, async (req, res) => {
+  try {
+    const menuitems = await MenuItem.find({});
+    res.json(menuitems);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+
+adminRouter.post('/admin/delete-menu-item', admin, async (req,res) => {
+
+  try {
+    const {id} = req.body;
+    let menuitem = await MenuItem.findByIdAndDelete(id);
+    
+    res.json(menuitem);
+  } catch (e) {
+    res.status(500).json({error : e.message});
+   }
+ 
+});
+
+adminRouter.post('/admin/update-menu-item', admin, async (req,res) => {
+  try {
+    const {id} = req.body;
+    let menuitem = await MenuItem.findByIdAndUpdate(id);
+    
+    res.json(menuitem);
+   } catch (e) {
+    res.status(500).json({error : e.message});
+}
+
+});
 
 module.exports = adminRouter;

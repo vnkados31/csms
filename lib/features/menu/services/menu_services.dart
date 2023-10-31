@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:csm_system/models/menuitem.dart';
 import 'package:csm_system/models/qrmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -10,46 +11,36 @@ import '../../../constants/global_variables.dart';
 import '../../../constants/utils.dart';
 import '../../../providers/user_provider.dart';
 
-class QrScannerServices {
-  void addToList(
+class MenuServices {
+  void addMenuItem(
       {required BuildContext context,
       required String name,
-      required String email,
-      required double psNumber,
-      required double vegUsers,
-      required double nonVegUsers,
-      required double dietUsers,
-      required double totalUsers,
-      required double scannedBy,
-      required double couponsLeft}) async {
+      required String day,
+      required String type
+      }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     try {
-      Qrmodel qrmodel = Qrmodel(
+      MenuItem menuItem = MenuItem(
           name: name,
-          email: email,
-          psNumber: psNumber,
-          vegUsers: vegUsers,
-          nonVegUsers: nonVegUsers,
-          dietUsers: dietUsers,
-          totalUsers: totalUsers,
-          scannedBy: scannedBy,
-          couponsLeft: couponsLeft);
+          day: day,
+          type: type
+         );
 
       http.Response res = await http.post(
-        Uri.parse('$uri/admin/scan-qr'),
+        Uri.parse('$uri/admin/add-menu-item'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'x-auth-token': userProvider.user.token,
         },
-        body: qrmodel.toJson(),
+        body: menuItem.toJson(),
       );
 
       httpErrorHandle(
         response: res,
         context: context,
         onSuccess: () {
-          showSnackBar(context, 'User Scanned Successfully!');
+          showSnackBar(context, 'Menu Item added Succesfully!');
           Navigator.pop(context);
         },
       );
@@ -58,12 +49,12 @@ class QrScannerServices {
     }
   }
 
-  Future<List<Qrmodel>> fetchAllScannedUsers(BuildContext context) async {
+  Future<List<MenuItem>> fetchMenuItems(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    List<Qrmodel> scannedUsersList = [];
+    List<MenuItem> menuItemsList = [];
     try {
       http.Response res =
-          await http.get(Uri.parse('$uri/admin/get-scanned-users'), headers: {
+          await http.get(Uri.parse('$uri/admin/get-menu-items'), headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'x-auth-token': userProvider.user.token,
       });
@@ -73,8 +64,8 @@ class QrScannerServices {
         context: context,
         onSuccess: () {
           for (int i = 0; i < jsonDecode(res.body).length; i++) {
-            scannedUsersList.add(
-              Qrmodel.fromJson(
+            menuItemsList.add(
+              MenuItem.fromJson(
                 jsonEncode(
                   jsonDecode(res.body)[i],
                 ),
@@ -86,26 +77,56 @@ class QrScannerServices {
     } catch (e) {
       showSnackBar(context, e.toString());
     }
-    return scannedUsersList;
+    return menuItemsList;
   }
 
 // here onSuccess callback method will help us in deleting product
 
-  void deleteScannedUser(
+  void deleteMenuItem(
       {required BuildContext context,
-      required Qrmodel scannedUser,
+      required MenuItem menuItem,
       required VoidCallback onSuccess}) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     try {
       http.Response res = await http.post(
-        Uri.parse('$uri/admin/delete-scanned-users'),
+        Uri.parse('$uri/admin/delete-menu-item'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'x-auth-token': userProvider.user.token,
         },
         body: jsonEncode({
-          'id': scannedUser.id,
+          'id': menuItem.id,
+        }),
+      );
+
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () {
+          onSuccess();
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+  }
+
+  void updateMenuItem(
+      {required BuildContext context,
+      required MenuItem menuItem,
+      required VoidCallback onSuccess}) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    try {
+      http.Response res = await http.post(
+        Uri.parse('$uri/admin/update-menu-item'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': userProvider.user.token,
+        },
+        body: jsonEncode({
+          'id': menuItem.id,
         }),
       );
 

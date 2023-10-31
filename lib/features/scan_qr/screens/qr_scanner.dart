@@ -1,4 +1,5 @@
 import 'package:csm_system/features/scan_qr/services/qr_scanner_services.dart';
+import 'package:csm_system/features/user_list/screens/scanned_users_list.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
@@ -166,14 +167,14 @@ class _QrScannerState extends State<QrScanner> {
                 onPressed: () {
                   // String currentUserUid = _user!.uid;
                   // //print(currentUserUid);
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => OfficeBoyList(id: currentUserUid),
-                  //   ),
-                  // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const  ScannedUsersList(),
+                    ),
+                  );
                 },
-                icon: Icon(Icons.arrow_forward),
+                icon: const  Icon(Icons.arrow_forward),
                 label: const Text(
                   'Proceed',
                   style: TextStyle(
