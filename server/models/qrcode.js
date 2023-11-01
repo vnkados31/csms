@@ -38,6 +38,10 @@ const qrcodeSchema = new mongoose.Schema ({
       couponsLeft : {
         type : Number,
         required : true,
+      },
+      date : {
+        type : String,
+        require : true,
       }
       
 });

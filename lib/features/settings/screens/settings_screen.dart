@@ -1,8 +1,14 @@
+import 'dart:convert';
+
 import 'package:csm_system/features/profile/screens/profile_screen.dart';
+import 'package:csm_system/features/settings/services/settings_services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../constants/global_variables.dart';
+import '../../../constants/utils.dart';
 import '../../../providers/user_provider.dart';
+import 'package:http/http.dart' as http;
 
 class SettingsScreen extends StatefulWidget {
   static const String routeName = '/settings';
@@ -13,14 +19,39 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  void _showAlertDialog(BuildContext context, String foodType, String email) {
-    String? str = email;
+  final SettingsServices settingServices = SettingsServices();
+
+  void _showAlertDialog(BuildContext context, String foodType) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return ShowDialog(str: str, foodType: foodType);
+        return ShowDialog(foodType: foodType);
       },
     );
+  }
+
+  // void addCoupons(User user) async {
+  //   settingServices.addCoupons(context: context, user: user, onSuccess: () {});
+  // }
+
+  Future<void> addCoupons(double psNumber) async {
+    final response = await http.put(
+      Uri.parse('$uri/api/add-coupons/$psNumber'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({}),
+    );
+
+    if (response.statusCode == 200) {
+      setState(() {
+        showSnackBar(context, '25 Coupons added Succesfully!');
+      });
+    } else {
+      setState(() {
+        showSnackBar(context, 'Coupons not added!');
+      });
+    }
   }
 
   @override
@@ -99,7 +130,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     // Add padding to all ListTile items
                     child: ListTile(
                       onTap: () {
-                        _showAlertDialog(context, user.foodType, user.email);
+                        _showAlertDialog(context, user.foodType.toString());
                       },
                       shape: RoundedRectangleBorder(
                         side: const BorderSide(width: 2),
@@ -158,6 +189,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       )),
                                   TextButton(
                                       onPressed: () async {
+                                        double psNumber = user.psNumber;
+                                        await addCoupons(psNumber);
                                         Navigator.pop(context);
                                         //await _addCoupons(_user!.email);
                                       },
@@ -248,16 +281,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
 }
 
 class ShowDialog extends StatefulWidget {
-  final str;
-  final foodType;
-  const ShowDialog({super.key, required this.str, required this.foodType});
+  final String foodType;
+  const ShowDialog({super.key, required this.foodType});
 
   @override
   State<ShowDialog> createState() => _ShowDialogState();
 }
 
 class _ShowDialogState extends State<ShowDialog> {
-  String _selectedFoodType = '';
+  late String _selectedFoodType = '';
+  final SettingsServices settingServices = SettingsServices();
 
   @override
   void initState() {
@@ -266,8 +299,39 @@ class _ShowDialogState extends State<ShowDialog> {
     _selectedFoodType = widget.foodType;
   }
 
+  Future<void> changeFoodType(double psNumber, String foodTypeUpdated) async {
+    final response = await http.put(
+      Uri.parse('$uri/api/change-food-type/$psNumber'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'foodType': foodTypeUpdated}),
+    );
+
+    if (response.statusCode == 200) {
+      setState(() {
+        showSnackBar(context, 'Food type updated Succesfully!');
+      });
+    } else {
+      setState(() {
+        showSnackBar(context, 'Not updated !');
+      });
+    }
+  }
+
+  // void changeFoodType(User user, String foodTypeUpdated) {
+  //   settingServices.changeFoodType(
+  //       context: context,
+  //       foodTypeUpdated: foodTypeUpdated.toString(),
+  //       psNumber: user.psNumber,
+  //       onSuccess: () {
+  //         setState(() {});
+  //       });
+  // }
+
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context).user;
     return AlertDialog(
       title: const Text(
         'Change Food Type',
@@ -332,6 +396,8 @@ class _ShowDialogState extends State<ShowDialog> {
             )),
         TextButton(
             onPressed: () async {
+              double psNumber = user.psNumber;
+              await changeFoodType(psNumber, _selectedFoodType);
               Navigator.pop(context);
               //await _changeFoodType(widget.str);
             },

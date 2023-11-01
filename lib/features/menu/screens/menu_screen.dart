@@ -3,6 +3,7 @@ import 'package:csm_system/features/menu/services/menu_services.dart';
 import 'package:csm_system/models/menuitem.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../../constants/utils.dart';
 import '../../../providers/user_provider.dart';
 import 'add_items.dart';
 
@@ -19,6 +20,7 @@ class _MenuScreenState extends State<MenuScreen> {
   late List<String> remainingDays;
   late int currIdxDiff;
   List<MenuItem>? menuItems;
+  List<MenuItem>? filteredItems;
 
   final MenuServices menuServices = MenuServices();
 
@@ -61,16 +63,37 @@ class _MenuScreenState extends State<MenuScreen> {
     return remainingDays;
   }
 
+  filterItemsFunction(String day, String type) async {
+    setState(() {
+      filteredItems = menuItems!.where((item) {
+        return item.day == day && item.type == type;
+      }).toList();
+    });
+  }
+
+  void deleteMenuItem(MenuItem menuItem) async {
+    menuServices.deleteMenuItem(
+        context: context,
+        menuItem: menuItem,
+        onSuccess: () {
+          showSnackBar(context, "Menu Item deleted Successfully");
+        });
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).user;
     // Define a list of food types based on the current day.
+
+    filterItemsFunction(selectedDay, dropdownValue);
     final foodTypes = <String>[
       'Veg',
       'NonVeg',
       'Diet',
       'Snacks',
     ];
+
     // dropdownValue = widget.foodType;
     return WillPopScope(
       onWillPop: () async {
@@ -97,8 +120,9 @@ class _MenuScreenState extends State<MenuScreen> {
                   child: DropdownButton<String>(
                     value: selectedDay,
                     onChanged: (String? newValue) {
-                      setState(() {
+                      setState(() async {
                         selectedDay = newValue!;
+                        await filterItemsFunction(selectedDay, dropdownValue);
                         //newQuery = FirebaseDatabase.instance.ref().child('MenuItems/$selectedDay/$newValue');
                       });
                     },
@@ -138,8 +162,9 @@ class _MenuScreenState extends State<MenuScreen> {
                       );
                     }).toList(),
                     onChanged: (String? newValue) {
-                      setState(() {
+                      setState(() async {
                         dropdownValue = newValue!;
+                        await filterItemsFunction(selectedDay, dropdownValue);
                         // newQuery = FirebaseDatabase.instance
                         //     .ref()
                         //     .child('MenuItems/$selectedDay/$newValue');
@@ -153,13 +178,13 @@ class _MenuScreenState extends State<MenuScreen> {
             const SizedBox(
               height: 10,
             ),
-            (menuItems == null)
+            (filteredItems == null)
                 ? const Center(child: const Loader())
                 : ListView.builder(
-                    itemCount: menuItems!.length,
+                    itemCount: filteredItems!.length ?? 0,
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
-                      final menuItemData = menuItems![index];
+                      final filteredItem = filteredItems![index];
                       return Card(
                         elevation: 8,
                         shadowColor: const Color(0xff2da9ef),
@@ -183,7 +208,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                   const EdgeInsets.symmetric(vertical: 8.0),
                               child: Center(
                                   child: Text(
-                                menuItemData.name,
+                                filteredItem.name,
                                 style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 25,
@@ -206,8 +231,8 @@ class _MenuScreenState extends State<MenuScreen> {
                                 PopupMenuItem(
                                   child: ListTile(
                                     onTap: () {
-                                      Navigator.pop(context);
-                                      //  showMyDialog(title, list[index]['id'].toString(),dropdownValue);
+                                      showMyDialog(
+                                          editController.text, filteredItem);
                                     },
                                     leading: const Icon(Icons.edit),
                                     title: const Text('Edit'),
@@ -215,7 +240,8 @@ class _MenuScreenState extends State<MenuScreen> {
                                 ),
                                 PopupMenuItem(
                                   child: ListTile(
-                                    onTap: () {
+                                    onTap: () async {
+                                      deleteMenuItem(filteredItem);
                                       Navigator.pop(context);
                                       //   ref.child(list[index]['id'].toString()).remove();
                                     },
@@ -252,38 +278,38 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
-  // Future<void> showMyDialog(String title, MenuItem menuItem) async {
-  //   editController.text = title;
-  //   final ref = FirebaseDatabase.instance
-  //       .ref()
-  //       .child('MenuItems/$selectedDay/$dropdownValue');
+  Future<void> showMyDialog(String title, MenuItem menuItem) async {
+    editController.text = title;
 
-  //   return showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //           title: const Text('Update'),
-  //           content: Container(
-  //             child: TextField(
-  //               controller: editController,
-  //               decoration: const InputDecoration(hintText: 'Edit'),
-  //             ),
-  //           ),
-  //           actions: [
-  //             TextButton(
-  //                 onPressed: () {
-  //                   Navigator.pop(context);
-  //                 },
-  //                 child: const Text('Cancel')),
-  //             TextButton(
-  //                 onPressed: () {
-  //                   Navigator.pop(context);
-  //                   menuServices.updateMenuItem(
-  //                       context: context, menuItem: menuItem, onSuccess: () {});
-  //                 },
-  //                 child: const Text('Update'))
-  //           ],
-  //         );
-  //       });
-  // }
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Update'),
+            content: Container(
+              child: TextField(
+                controller: editController,
+                decoration: const InputDecoration(hintText: 'Edit'),
+              ),
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Cancel')),
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    menuServices.updateMenuItem(
+                        context: context,
+                        menuItem: menuItem,
+                        name: editController.text,
+                        onSuccess: () {});
+                  },
+                  child: const Text('Update'))
+            ],
+          );
+        });
+  }
 }

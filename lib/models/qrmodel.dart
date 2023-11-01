@@ -10,6 +10,7 @@ class Qrmodel {
   final double totalUsers;
   final double scannedBy;
   final double couponsLeft;
+  final String date;
   final String? id;
 
   Qrmodel(
@@ -22,6 +23,7 @@ class Qrmodel {
       required this.totalUsers,
       required this.scannedBy,
       required this.couponsLeft,
+      required this.date,
       this.id});
 
   Map<String, dynamic> toMap() {
@@ -34,7 +36,8 @@ class Qrmodel {
       'dietUsers': dietUsers,
       'totalUsers': totalUsers,
       'scannedBy': scannedBy,
-      'couponsLeft' : couponsLeft,
+      'couponsLeft': couponsLeft,
+      'date': date,
       'id': id,
     };
   }
@@ -50,6 +53,7 @@ class Qrmodel {
       totalUsers: map['totalUsers']?.toDouble() ?? 0.0,
       scannedBy: map['scannedBy']?.toDouble() ?? 0.0,
       couponsLeft: map['couponsLeft']?.toDouble() ?? 0.0,
+      date: map['date'] ?? '',
       id: map['_id'],
     );
   }

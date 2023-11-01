@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 
 const authRouter = require('./routes/auth');
 const adminRouter = require('./routes/admin');
+const settingsRouter = require('./routes/settings') 
 
 const PORT = 3000;
 const app = express();
@@ -13,6 +14,7 @@ const DB = "mongodb+srv://test123:test123@cluster0.ioejqkz.mongodb.net/?retryWri
 app.use(express.json());
 app.use(authRouter);
 app.use(adminRouter);
+app.use(settingsRouter);
 
 
 mongoose.connect(DB).then( () => {

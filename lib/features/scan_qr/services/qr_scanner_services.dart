@@ -21,7 +21,8 @@ class QrScannerServices {
       required double dietUsers,
       required double totalUsers,
       required double scannedBy,
-      required double couponsLeft}) async {
+      required double couponsLeft,
+      required String date}) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     try {
@@ -34,7 +35,8 @@ class QrScannerServices {
           dietUsers: dietUsers,
           totalUsers: totalUsers,
           scannedBy: scannedBy,
-          couponsLeft: couponsLeft);
+          couponsLeft: couponsLeft,
+          date: date);
 
       http.Response res = await http.post(
         Uri.parse('$uri/admin/scan-qr'),

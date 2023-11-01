@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'package:csm_system/models/menuitem.dart';
-import 'package:csm_system/models/qrmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -115,6 +113,7 @@ class MenuServices {
   void updateMenuItem(
       {required BuildContext context,
       required MenuItem menuItem,
+      required String name,
       required VoidCallback onSuccess}) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
@@ -127,6 +126,7 @@ class MenuServices {
         },
         body: jsonEncode({
           'id': menuItem.id,
+          'name': name
         }),
       );
 

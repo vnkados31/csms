@@ -1,14 +1,14 @@
 const express = require("express");
 const adminRouter = express.Router();
 const admin = require("../middlewares/admin");
-const { Qrcode } = require("../models/qrcode");
+const { Qrcode, qrcodeSchema } = require("../models/qrcode");
 const { PromiseProvider } = require("mongoose");
 const { MenuItem } = require("../models/menuitem");
 
 // Add product
 adminRouter.post("/admin/scan-qr", async (req, res) => {
   try {
-    const { name, email, psNumber, vegUsers, nonVegUsers, dietUsers,totalUsers,scannedBy,couponsLeft } = req.body;
+    const { name, email, psNumber, vegUsers, nonVegUsers, dietUsers,totalUsers,scannedBy,couponsLeft,date } = req.body;
     let qrcode = new Qrcode ({
         name,
         email,
@@ -19,6 +19,7 @@ adminRouter.post("/admin/scan-qr", async (req, res) => {
         totalUsers,
         scannedBy,
         couponsLeft,
+        date
     });
     qrcode = await qrcode.save(); 
     res.json(qrcode);
@@ -49,6 +50,21 @@ adminRouter.post('/admin/delete-scanned-user', admin , async (req,res) => {
     } catch (e) {
         res.status(500).json({error : e.message});
     }
+});
+
+adminRouter.post('/admin/check-scanned-user', async (req, res) => {
+  const { psNumber, date } = req.body;
+  try {
+    const user = await Qrcode.findOne({ psNumber, date });
+    if (user) {
+      res.json({ found: true, user });
+    } else {
+      res.json({ found: false,date:date });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
 });
 
 adminRouter.post('/admin/add-menu-item', admin, async (req,res) => {
@@ -86,8 +102,8 @@ adminRouter.post('/admin/delete-menu-item', admin, async (req,res) => {
   try {
     const {id} = req.body;
     let menuitem = await MenuItem.findByIdAndDelete(id);
-    
-    res.json(menuitem);
+    menuitem = await menuitem.save()
+
   } catch (e) {
     res.status(500).json({error : e.message});
    }
@@ -96,8 +112,8 @@ adminRouter.post('/admin/delete-menu-item', admin, async (req,res) => {
 
 adminRouter.post('/admin/update-menu-item', admin, async (req,res) => {
   try {
-    const {id} = req.body;
-    let menuitem = await MenuItem.findByIdAndUpdate(id);
+    const {id,val} = req.body;
+    let menuitem = await MenuItem.findByIdAndUpdate({id},{name: val});
     
     res.json(menuitem);
    } catch (e) {

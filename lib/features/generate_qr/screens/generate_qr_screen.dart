@@ -1,6 +1,7 @@
 import 'package:csm_system/features/generate_qr/screens/qr_screen.dart';
 import 'package:csm_system/providers/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class GenerateQrScreen extends StatefulWidget {
@@ -32,7 +33,10 @@ class _GenerateQrScreenState extends State<GenerateQrScreen> {
   late bool nonVegData = false;
   late bool dietData = false;
 
-  void assingningData(double psNumber,double couponsLeft) {
+  void assingningData(double psNumber, double couponsLeft) {
+    var now = DateTime.now();
+    var formatter = DateFormat('yyyy-MM-dd');
+    String formattedDate = formatter.format(now);
     setState(() {
       dataToSend.clear();
       dataToSend.add(name);
@@ -43,6 +47,7 @@ class _GenerateQrScreenState extends State<GenerateQrScreen> {
       dataToSend.add(dietUsers);
       dataToSend.add(totalUsers);
       dataToSend.add(couponsLeft);
+      dataToSend.add(formattedDate);
     });
   }
 
@@ -193,7 +198,7 @@ class _GenerateQrScreenState extends State<GenerateQrScreen> {
                   SizedBox(height: screenHeight * 0.05),
                   ElevatedButton.icon(
                     onPressed: () async {
-                      assingningData(user.psNumber,user.couponsLeft);
+                      assingningData(user.psNumber, user.couponsLeft);
 
                       Navigator.push(
                         context,
