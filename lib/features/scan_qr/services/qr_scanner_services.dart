@@ -65,7 +65,8 @@ class QrScannerServices {
     List<Qrmodel> scannedUsersList = [];
     try {
       http.Response res =
-          await http.get(Uri.parse('$uri/admin/get-scanned-users'), headers: {
+          await http.get(Uri.parse('$uri/admin/get-scanned-users'), 
+          headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'x-auth-token': userProvider.user.token,
       });

@@ -1,7 +1,9 @@
 import 'package:csm_system/features/scan_qr/services/qr_scanner_services.dart';
 import 'package:csm_system/models/qrmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../common/widgets/loader.dart';
+import '../../../providers/user_provider.dart';
 
 class ScannedUsersList extends StatefulWidget {
   static const String routeName = '/scanned-users';
@@ -13,6 +15,7 @@ class ScannedUsersList extends StatefulWidget {
 
 class _ScannedUsersListState extends State<ScannedUsersList> {
   List<Qrmodel>? scannedUsers;
+  List<Qrmodel>? filteredItems;
   final QrScannerServices adminServices = QrScannerServices();
 
   @override
@@ -26,8 +29,20 @@ class _ScannedUsersListState extends State<ScannedUsersList> {
     setState(() {});
   }
 
+  filterItemsFunction(double scannedBy) async {
+    setState(() {
+      filteredItems = scannedUsers!.where((item) {
+        return item.scannedBy == scannedBy;
+      }).toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context).user;
+
+    filterItemsFunction(user.psNumber);
+
     return scannedUsers == null
         ? const Loader()
         : Scaffold(
@@ -39,9 +54,9 @@ class _ScannedUsersListState extends State<ScannedUsersList> {
               ),
             ),
             body: ListView.builder(
-                itemCount: scannedUsers!.length,
+                itemCount: filteredItems!.length,
                 itemBuilder: (context, index) {
-                  final scannedUserData = scannedUsers![index];
+                  final filteredUserData = filteredItems![index];
                   return Card(
                     color: Colors.amber.shade100,
                     child: ConstrainedBox(
@@ -52,7 +67,7 @@ class _ScannedUsersListState extends State<ScannedUsersList> {
                           children: [
                             Center(
                               child: Text(
-                                scannedUserData.name,
+                                filteredUserData.name,
                                 style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 30,
@@ -60,28 +75,28 @@ class _ScannedUsersListState extends State<ScannedUsersList> {
                               ),
                             ),
                             Text(
-                              'Total Users: ${scannedUserData.totalUsers}',
+                              'Total Users: ${filteredUserData.totalUsers}',
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 24,
                               ),
                             ),
                             Text(
-                              'Veg Users: ${scannedUserData.totalUsers}',
+                              'Veg Users: ${filteredUserData.vegUsers}',
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 24,
                               ),
                             ),
                             Text(
-                              'Non-Veg Users: ${scannedUserData.nonVegUsers}',
+                              'Non-Veg Users: ${filteredUserData.nonVegUsers}',
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 24,
                               ),
                             ),
                             Text(
-                              'Diet Users: ${scannedUserData.dietUsers}',
+                              'Diet Users: ${filteredUserData.dietUsers}',
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 24,

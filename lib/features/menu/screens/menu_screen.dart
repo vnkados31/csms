@@ -20,7 +20,7 @@ class _MenuScreenState extends State<MenuScreen> {
   late List<String> remainingDays;
   late int currIdxDiff;
   List<MenuItem>? menuItems;
-  List<MenuItem>? filteredItems;
+  // List<MenuItem>? filteredItems;
 
   final MenuServices menuServices = MenuServices();
 
@@ -33,14 +33,12 @@ class _MenuScreenState extends State<MenuScreen> {
   }
 
   fetchMenuItems() async {
-    menuItems = await menuServices.fetchMenuItems(context);
+    menuItems =
+        await menuServices.fetchMenuItems(context, selectedDay, dropdownValue);
     setState(() {});
   }
 
   String dropdownValue = 'Veg';
-
-  final searchFilter = TextEditingController();
-  final editController = TextEditingController();
 
   List<String> getRemainingDays() {
     List<String> days = [
@@ -63,22 +61,33 @@ class _MenuScreenState extends State<MenuScreen> {
     return remainingDays;
   }
 
-  filterItemsFunction(String day, String type) async {
-    setState(() {
-      filteredItems = menuItems!.where((item) {
-        return item.day == day && item.type == type;
-      }).toList();
-    });
+  void initializePreviousScreen() async {
+    selectedDay = (remainingDays.isNotEmpty ? remainingDays[0] : null)!;
+    await fetchMenuItems();
+    setState(() {});
   }
 
-  void deleteMenuItem(MenuItem menuItem) async {
+  void deleteMenuItem(MenuItem menuItem, int index) async {
     menuServices.deleteMenuItem(
         context: context,
         menuItem: menuItem,
         onSuccess: () {
+          menuItems!.removeAt(index);
           showSnackBar(context, "Menu Item deleted Successfully");
+          setState(() {});
         });
-    setState(() {});
+  }
+
+  void navigateToSecondScreen(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddItemScreen(
+            day: selectedDay,
+            dropdownValue: dropdownValue,
+            initFunction: initializePreviousScreen),
+      ),
+    );
   }
 
   @override
@@ -86,7 +95,7 @@ class _MenuScreenState extends State<MenuScreen> {
     final user = Provider.of<UserProvider>(context).user;
     // Define a list of food types based on the current day.
 
-    filterItemsFunction(selectedDay, dropdownValue);
+    // filterItemsFunction(selectedDay, dropdownValue);
     final foodTypes = <String>[
       'Veg',
       'NonVeg',
@@ -122,8 +131,7 @@ class _MenuScreenState extends State<MenuScreen> {
                     onChanged: (String? newValue) {
                       setState(() async {
                         selectedDay = newValue!;
-                        await filterItemsFunction(selectedDay, dropdownValue);
-                        //newQuery = FirebaseDatabase.instance.ref().child('MenuItems/$selectedDay/$newValue');
+                        await fetchMenuItems();
                       });
                     },
                     items: remainingDays
@@ -164,11 +172,7 @@ class _MenuScreenState extends State<MenuScreen> {
                     onChanged: (String? newValue) {
                       setState(() async {
                         dropdownValue = newValue!;
-                        await filterItemsFunction(selectedDay, dropdownValue);
-                        // newQuery = FirebaseDatabase.instance
-                        //     .ref()
-                        //     .child('MenuItems/$selectedDay/$newValue');
-                        //firebaseQuery = ref.orderByChild('type').equalTo('NonVeg');
+                        await fetchMenuItems();
                       });
                     },
                   ),
@@ -178,13 +182,13 @@ class _MenuScreenState extends State<MenuScreen> {
             const SizedBox(
               height: 10,
             ),
-            (filteredItems == null)
-                ? const Center(child: const Loader())
+            (menuItems == null)
+                ? const Center(child: Loader())
                 : ListView.builder(
-                    itemCount: filteredItems!.length ?? 0,
+                    itemCount: menuItems!.length,
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
-                      final filteredItem = filteredItems![index];
+                      final filteredItem = menuItems![index];
                       return Card(
                         elevation: 8,
                         shadowColor: const Color(0xff2da9ef),
@@ -232,7 +236,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                   child: ListTile(
                                     onTap: () {
                                       showMyDialog(
-                                          editController.text, filteredItem);
+                                          filteredItem.name, filteredItem);
                                     },
                                     leading: const Icon(Icons.edit),
                                     title: const Text('Edit'),
@@ -241,7 +245,8 @@ class _MenuScreenState extends State<MenuScreen> {
                                 PopupMenuItem(
                                   child: ListTile(
                                     onTap: () async {
-                                      deleteMenuItem(filteredItem);
+                                      deleteMenuItem(filteredItem, index);
+
                                       Navigator.pop(context);
                                       //   ref.child(list[index]['id'].toString()).remove();
                                     },
@@ -263,11 +268,7 @@ class _MenuScreenState extends State<MenuScreen> {
             padding: const EdgeInsets.only(bottom: 60),
             child: FloatingActionButton(
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => AddItemScreen(
-                            day: selectedDay, dropdownValue: dropdownValue)));
+                navigateToSecondScreen(context);
               },
               child: const Icon(Icons.add),
             ),
@@ -279,7 +280,7 @@ class _MenuScreenState extends State<MenuScreen> {
   }
 
   Future<void> showMyDialog(String title, MenuItem menuItem) async {
-    editController.text = title;
+    TextEditingController editController = TextEditingController(text: title);
 
     return showDialog(
         context: context,

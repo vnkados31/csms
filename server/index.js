@@ -4,7 +4,8 @@ const mongoose = require('mongoose');
 
 const authRouter = require('./routes/auth');
 const adminRouter = require('./routes/admin');
-const settingsRouter = require('./routes/settings') 
+const settingsRouter = require('./routes/settings'); 
+const feedbackRouter = require('./routes/feedback');
 
 const PORT = 3000;
 const app = express();
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use(authRouter);
 app.use(adminRouter);
 app.use(settingsRouter);
+app.use(feedbackRouter);
 
 
 mongoose.connect(DB).then( () => {

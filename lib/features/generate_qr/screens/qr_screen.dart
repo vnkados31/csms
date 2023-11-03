@@ -7,7 +7,7 @@ import '../../../providers/user_provider.dart';
 
 class QrScreen extends StatelessWidget {
   final List<dynamic> itemList;
-  const QrScreen({super.key,required this.itemList});
+  const QrScreen({super.key, required this.itemList});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,6 @@ class QrScreen extends StatelessWidget {
     DateTime now = DateTime.now();
     String formattedDate = DateFormat.yMMMd().format(now);
 
-    
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -48,7 +47,7 @@ class QrScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const CircleAvatar(
-                backgroundImage: AssetImage('asset/person.png'),
+                backgroundImage: AssetImage('asset/images/person.png'),
                 radius: 70,
                 backgroundColor: Colors.transparent,
               ),
@@ -81,7 +80,7 @@ class QrScreen extends StatelessWidget {
                 ),
               ),
               Text(
-                '${itemList.elementAt(5)} Users',
+                '${itemList.elementAt(6)} Users',
                 style: const TextStyle(
                   color: Colors.black,
                   fontSize: 50,

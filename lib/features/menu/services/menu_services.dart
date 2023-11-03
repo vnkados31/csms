@@ -14,16 +14,11 @@ class MenuServices {
       {required BuildContext context,
       required String name,
       required String day,
-      required String type
-      }) async {
+      required String type}) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     try {
-      MenuItem menuItem = MenuItem(
-          name: name,
-          day: day,
-          type: type
-         );
+      MenuItem menuItem = MenuItem(name: name, day: day, type: type);
 
       http.Response res = await http.post(
         Uri.parse('$uri/admin/add-menu-item'),
@@ -47,7 +42,8 @@ class MenuServices {
     }
   }
 
-  Future<List<MenuItem>> fetchMenuItems(BuildContext context) async {
+  Future<List<MenuItem>> fetchMenuItems(
+      BuildContext context, String selectedDay, String foodType) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     List<MenuItem> menuItemsList = [];
     try {
@@ -62,13 +58,15 @@ class MenuServices {
         context: context,
         onSuccess: () {
           for (int i = 0; i < jsonDecode(res.body).length; i++) {
-            menuItemsList.add(
-              MenuItem.fromJson(
-                jsonEncode(
-                  jsonDecode(res.body)[i],
-                ),
+            MenuItem menuItem = MenuItem.fromJson(
+              jsonEncode(
+                jsonDecode(res.body)[i],
               ),
             );
+
+            if (menuItem.day == selectedDay && menuItem.type == foodType) {
+              menuItemsList.add(menuItem);
+            }
           }
         },
       );
@@ -124,17 +122,14 @@ class MenuServices {
           'Content-Type': 'application/json; charset=UTF-8',
           'x-auth-token': userProvider.user.token,
         },
-        body: jsonEncode({
-          'id': menuItem.id,
-          'name': name
-        }),
+        body: jsonEncode({'id': menuItem.id, 'name': name.toString()}),
       );
 
       httpErrorHandle(
         response: res,
         context: context,
         onSuccess: () {
-          onSuccess();
+          showSnackBar(context, 'Menu Item Updated Succesfully!');
         },
       );
     } catch (e) {

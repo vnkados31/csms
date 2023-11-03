@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 class AddItemScreen extends StatefulWidget {
   final String day;
   final String dropdownValue;
-  const AddItemScreen({
-    Key? key,
-    required this.day,
-    required this.dropdownValue,
-  }) : super(key: key);
+  final VoidCallback initFunction;
+  const AddItemScreen(
+      {Key? key,
+      required this.day,
+      required this.dropdownValue,
+      required this.initFunction})
+      : super(key: key);
 
   @override
   State<AddItemScreen> createState() => _AddItemScreenState();
@@ -65,21 +67,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                 addMenuItem();
                 loading = false;
 
-                //String id = DateTime.now().millisecondsSinceEpoch.toString();
-                // databaseRef.child(id).set({
-                //   'title' : postController.text.toString().trim(),
-                //   'id' : id
-                // }).then((value){
-                //   Utils().toastMessage('Post Added');
-                //   setState(() {
-                //     loading = false;
-                //   });
-                // }).onError((error, stackTrace){
-                //   Utils().toastMessage(error.toString());
-                //   setState(() {
-                //     loading = false;
-                //   });
-                // });
+                widget.initFunction();
               },
               icon: const Icon(Icons.arrow_forward),
               label: const Text(

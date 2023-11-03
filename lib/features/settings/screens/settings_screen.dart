@@ -97,7 +97,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             const SizedBox(width: 20),
                             // User Profile Picture
                             const CircleAvatar(
-                              backgroundImage: AssetImage('asset/person.png'),
+                              backgroundImage:
+                                  AssetImage('asset/images/person.png'),
                               radius: 50,
                               backgroundColor: Colors.transparent,
                             ),
@@ -190,8 +191,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   TextButton(
                                       onPressed: () async {
                                         double psNumber = user.psNumber;
-                                        await addCoupons(psNumber);
+
+                                        if (user.couponsLeft > 35) {
+                                          showSnackBar(context,
+                                              'Already have enough Coupons!');
+                                        } else {
+                                          await addCoupons(psNumber);
+                                        }
                                         Navigator.pop(context);
+
                                         //await _addCoupons(_user!.email);
                                       },
                                       child: const Text('Yes',

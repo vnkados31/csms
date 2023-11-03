@@ -4,6 +4,7 @@ const admin = require("../middlewares/admin");
 const { Qrcode, qrcodeSchema } = require("../models/qrcode");
 const { PromiseProvider } = require("mongoose");
 const { MenuItem } = require("../models/menuitem");
+const { User } = require("../models/user");
 
 // Add product
 adminRouter.post("/admin/scan-qr", async (req, res) => {
@@ -22,7 +23,14 @@ adminRouter.post("/admin/scan-qr", async (req, res) => {
         date
     });
     qrcode = await qrcode.save(); 
-    res.json(qrcode);
+
+    const user =await User.findOne({psNumber});
+
+    user.couponsLeft = couponsLeft - totalUsers;
+
+    user = await user.save();
+
+    //res.json(qrcode);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
@@ -101,8 +109,10 @@ adminRouter.post('/admin/delete-menu-item', admin, async (req,res) => {
 
   try {
     const {id} = req.body;
-    let menuitem = await MenuItem.findByIdAndDelete(id);
-    menuitem = await menuitem.save()
+    const menuitem = await MenuItem.findByIdAndDelete(id);
+
+    res.status(200).send('Success');
+    
 
   } catch (e) {
     res.status(500).json({error : e.message});
@@ -110,11 +120,15 @@ adminRouter.post('/admin/delete-menu-item', admin, async (req,res) => {
  
 });
 
-adminRouter.post('/admin/update-menu-item', admin, async (req,res) => {
+adminRouter.post('/admin/update-menu-item', async (req,res) => {
   try {
-    const {id,val} = req.body;
-    let menuitem = await MenuItem.findByIdAndUpdate({id},{name: val});
-    
+    const {id,name} = req.body;
+    const menuitem = await MenuItem.findOne({id : id});
+
+    menuitem.name = name;
+
+    menuitem = await menuitem.save();
+    // menuitem = await menuitem.save();
     res.json(menuitem);
    } catch (e) {
     res.status(500).json({error : e.message});

@@ -19,7 +19,7 @@ class BottomBar extends StatefulWidget {
 
 class _BottomBarState extends State<BottomBar> {
   int _page = 1;
-  double bottomBarWidth = 42;
+  double bottomBarWidth = 70;
   double bottomBarBorderWidth = 5;
 
   List<Widget> pages = [
@@ -108,7 +108,7 @@ class _BottomBarState extends State<BottomBar> {
                             : GlobalVariables.backgroundColor,
                         width: bottomBarBorderWidth)),
               ),
-              child: const Icon(Icons.home_outlined),
+              child: const Icon(Icons.restaurant_menu),
             ),
             label: '',
           ),
@@ -124,7 +124,7 @@ class _BottomBarState extends State<BottomBar> {
                             : GlobalVariables.backgroundColor,
                         width: bottomBarBorderWidth)),
               ),
-              child: const Icon(Icons.person_outline_outlined),
+              child: const Icon(Icons.qr_code),
             ),
             label: '',
           ),
@@ -141,7 +141,7 @@ class _BottomBarState extends State<BottomBar> {
                         width: bottomBarBorderWidth)),
               ),
               child: badges.Badge(
-                child: const Icon(Icons.home_outlined),
+                child: const Icon(Icons.notifications),
                 elevation: 0,
                 badgeContent: const Text('2'),
                 badgeColor: Colors.white,
