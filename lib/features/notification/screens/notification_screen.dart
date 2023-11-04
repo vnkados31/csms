@@ -16,11 +16,11 @@ class NotificationScreen extends StatefulWidget {
 class _NotificationScreenState extends State<NotificationScreen> {
   DateTime now = DateTime.now();
   String? today;
-  double _rating = 1.0;
+  double _rating = 1;
   final FeedServices feedServices = FeedServices();
   final TextEditingController _feedbackController = TextEditingController();
 
-  void sendFeedback(double psNumber) {
+  void sendFeedback(int psNumber) {
     feedServices.feedUser(
       context: context,
       feedText: _feedbackController.text,
@@ -98,7 +98,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   return GestureDetector(
                     onTap: () {
                       setState(() {
-                        _rating = index + 1.0; // Set the selected rating
+                        _rating = index + 1; // Set the selected rating
                       });
                     },
                     child: RichText(

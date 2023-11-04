@@ -15,13 +15,13 @@ class QrScannerServices {
       {required BuildContext context,
       required String name,
       required String email,
-      required double psNumber,
-      required double vegUsers,
-      required double nonVegUsers,
-      required double dietUsers,
-      required double totalUsers,
-      required double scannedBy,
-      required double couponsLeft,
+      required int psNumber,
+      required int vegUsers,
+      required int nonVegUsers,
+      required int dietUsers,
+      required int totalUsers,
+      required int scannedBy,
+      required int couponsLeft,
       required String date}) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
@@ -52,7 +52,6 @@ class QrScannerServices {
         context: context,
         onSuccess: () {
           showSnackBar(context, 'User Scanned Successfully!');
-          Navigator.pop(context);
         },
       );
     } catch (e) {
@@ -60,16 +59,18 @@ class QrScannerServices {
     }
   }
 
-  Future<List<Qrmodel>> fetchAllScannedUsers(BuildContext context) async {
+  Future<List<Qrmodel>> fetchAllScannedUsers(
+      BuildContext context, int psNumber, String day) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     List<Qrmodel> scannedUsersList = [];
     try {
-      http.Response res =
-          await http.get(Uri.parse('$uri/admin/get-scanned-users'), 
+      http.Response res = await http.post(
+          Uri.parse('$uri/admin/get-scanned-users'),
           headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-        'x-auth-token': userProvider.user.token,
-      });
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-auth-token': userProvider.user.token,
+          },
+          body: jsonEncode({'scannedBy': psNumber, 'date': day.toString()}));
 
       httpErrorHandle(
         response: res,

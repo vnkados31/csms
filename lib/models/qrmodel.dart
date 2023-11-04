@@ -3,13 +3,13 @@ import 'dart:convert';
 class Qrmodel {
   final String name;
   final String email;
-  final double psNumber;
-  final double vegUsers;
-  final double nonVegUsers;
-  final double dietUsers;
-  final double totalUsers;
-  final double scannedBy;
-  final double couponsLeft;
+  final int psNumber;
+  final int vegUsers;
+  final int nonVegUsers;
+  final int dietUsers;
+  final int totalUsers;
+  final int scannedBy;
+  final int couponsLeft;
   final String date;
   final String? id;
 
@@ -46,13 +46,13 @@ class Qrmodel {
     return Qrmodel(
       name: map['name'] ?? '',
       email: map['email'] ?? '',
-      psNumber: map['psNumber']?.toDouble() ?? 0.0,
-      vegUsers: map['vegUsers']?.toDouble() ?? 0.0,
-      nonVegUsers: map['nonVegUsers']?.toDouble() ?? 0.0,
-      dietUsers: map['dietUsers']?.toDouble() ?? 0.0,
-      totalUsers: map['totalUsers']?.toDouble() ?? 0.0,
-      scannedBy: map['scannedBy']?.toDouble() ?? 0.0,
-      couponsLeft: map['couponsLeft']?.toDouble() ?? 0.0,
+      psNumber: map['psNumber']?.toInt() ?? 0,
+      vegUsers: map['vegUsers']?.toInt() ?? 0,
+      nonVegUsers: map['nonVegUsers']?.toInt() ?? 0,
+      dietUsers: map['dietUsers']?.toInt() ?? 0,
+      totalUsers: map['totalUsers']?.toInt() ?? 0,
+      scannedBy: map['scannedBy']?.toInt() ?? 0,
+      couponsLeft: map['couponsLeft']?.toInt() ?? 0,
       date: map['date'] ?? '',
       id: map['_id'],
     );

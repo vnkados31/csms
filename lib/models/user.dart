@@ -4,9 +4,9 @@ class User {
   final String id;
   final String name;
   final String email;
-  final double psNumber;
+  final int psNumber;
   final String password;
-  final double couponsLeft;
+  final int couponsLeft;
   final String foodType;
   final String userType;
   final String dob;
@@ -44,10 +44,10 @@ class User {
       id: map['_id'] ?? '',
       name: map['name'] ?? '',
       email: map['email'] ?? '',
-      psNumber: map['psNumber']?.toDouble() ?? 0.0,
+      psNumber: map['psNumber']?.toInt() ?? 0,
       password: map['password'] ?? '',
       dob: map['dob'] ?? '',
-      couponsLeft: map['couponsLeft']?.toDouble() ?? 0.0,
+      couponsLeft: map['couponsLeft']?.toInt() ?? 0,
       foodType: map['foodType'] ?? '',
       userType: map['userType'] ?? '',
       token: map['token'] ?? '',

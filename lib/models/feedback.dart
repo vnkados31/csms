@@ -5,7 +5,7 @@ class FeedbackReq {
   final String id;
   final String feedText;
   final String ratingText;
-  final double psNumber;
+  final int psNumber;
   final String today;
   FeedbackReq({
     required this.id,
@@ -30,7 +30,7 @@ class FeedbackReq {
       id: map['_id'] as String,
       feedText: map['feedText'] as String,
       ratingText: map['ratingText'] as String,
-      psNumber: map['psNumber']?.toDouble() ?? 0.0,
+      psNumber: map['psNumber']?.toInt() ?? 0.0,
       today: map['today'] as String,
     );
   }

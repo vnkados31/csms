@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../menu/services/menu_services.dart';
+
 class GenerateQrScreen extends StatefulWidget {
   static const String routeName = '/generateqr';
   const GenerateQrScreen({super.key});
@@ -33,7 +35,9 @@ class _GenerateQrScreenState extends State<GenerateQrScreen> {
   late bool nonVegData = false;
   late bool dietData = false;
 
-  void assingningData(double psNumber, double couponsLeft) {
+  final MenuServices menuServices = MenuServices();
+
+  void assingningData(int psNumber, int couponsLeft) {
     var now = DateTime.now();
     var formatter = DateFormat('yyyy-MM-dd');
     String formattedDate = formatter.format(now);
@@ -52,6 +56,25 @@ class _GenerateQrScreenState extends State<GenerateQrScreen> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    checkFoodType();
+  }
+
+  void checkFoodType() async {
+    DateTime date = DateTime.now();
+    String weekDay = DateFormat('EEEE').format(date);
+    print("day $weekDay");
+    nonVegData = await menuServices.checkFoodType(
+        context: context, selectedDay: weekDay, foodType: "NonVeg");
+    dietData = await menuServices.checkFoodType(
+        context: context, selectedDay: weekDay, foodType: "Diet");
+
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).user;
 
@@ -63,15 +86,26 @@ class _GenerateQrScreenState extends State<GenerateQrScreen> {
         value: UserDiet.veg,
         child: Center(child: Text('Veg')),
       ),
-      const DropdownMenuItem<UserDiet>(
-        value: UserDiet.nonVeg,
-        child: Center(child: Text('NonVeg')),
-      ),
-      const DropdownMenuItem<UserDiet>(
-        value: UserDiet.diet,
-        child: Center(child: Text('Diet')),
-      ),
     ];
+
+    if (nonVegData) {
+      // Add the "Non-Veg" item only if it's not Wednesday, Friday, or Saturday.
+      dropdownItems.add(
+        const DropdownMenuItem<UserDiet>(
+          value: UserDiet.nonVeg,
+          child: Center(child: Text('Non-Veg')),
+        ),
+      );
+    }
+
+    if (dietData) {
+      dropdownItems.addAll([
+        const DropdownMenuItem<UserDiet>(
+          value: UserDiet.diet,
+          child: Center(child: Text('Diet')),
+        ),
+      ]);
+    }
 
     return Scaffold(
       extendBodyBehindAppBar: true,

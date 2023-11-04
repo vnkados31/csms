@@ -47,11 +47,13 @@ class MenuServices {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     List<MenuItem> menuItemsList = [];
     try {
-      http.Response res =
-          await http.get(Uri.parse('$uri/admin/get-menu-items'), headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-        'x-auth-token': userProvider.user.token,
-      });
+      http.Response res = await http.get(
+        Uri.parse('$uri/admin/get-menu-items'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': userProvider.user.token,
+        },
+      );
 
       httpErrorHandle(
         response: res,
@@ -129,11 +131,44 @@ class MenuServices {
         response: res,
         context: context,
         onSuccess: () {
-          showSnackBar(context, 'Menu Item Updated Succesfully!');
+          onSuccess();
         },
       );
     } catch (e) {
       showSnackBar(context, e.toString());
+    }
+  }
+
+  Future<bool> checkFoodType({
+    required BuildContext context,
+    required String selectedDay,
+    required String foodType,
+  }) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    try {
+      http.Response res = await http.post(
+        Uri.parse('$uri/admin/check-food-type'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': userProvider.user.token,
+        },
+        body: jsonEncode({'day': selectedDay, 'type': foodType}),
+      );
+
+      if (res.statusCode == 200) {
+        return true;
+      } else if (res.statusCode == 400) {
+        return false;
+      } else {
+        // Handle other status codes as needed
+        // You might want to throw an exception or handle them differently.
+        return false;
+      }
+    } catch (e) {
+      // Handle network or other errors here
+      showSnackBar(context, e.toString());
+      return false;
     }
   }
 }

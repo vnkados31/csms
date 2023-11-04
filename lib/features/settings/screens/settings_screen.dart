@@ -34,7 +34,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   //   settingServices.addCoupons(context: context, user: user, onSuccess: () {});
   // }
 
-  Future<void> addCoupons(double psNumber) async {
+  Future<void> addCoupons(int psNumber) async {
     final response = await http.put(
       Uri.parse('$uri/api/add-coupons/$psNumber'),
       headers: {
@@ -190,7 +190,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       )),
                                   TextButton(
                                       onPressed: () async {
-                                        double psNumber = user.psNumber;
+                                        int psNumber = user.psNumber;
 
                                         if (user.couponsLeft > 35) {
                                           showSnackBar(context,
@@ -307,7 +307,7 @@ class _ShowDialogState extends State<ShowDialog> {
     _selectedFoodType = widget.foodType;
   }
 
-  Future<void> changeFoodType(double psNumber, String foodTypeUpdated) async {
+  Future<void> changeFoodType(int psNumber, String foodTypeUpdated) async {
     final response = await http.put(
       Uri.parse('$uri/api/change-food-type/$psNumber'),
       headers: {
@@ -404,7 +404,7 @@ class _ShowDialogState extends State<ShowDialog> {
             )),
         TextButton(
             onPressed: () async {
-              double psNumber = user.psNumber;
+              int psNumber = user.psNumber;
               await changeFoodType(psNumber, _selectedFoodType);
               Navigator.pop(context);
               //await _changeFoodType(widget.str);

@@ -26,7 +26,6 @@ class QrScanner extends StatefulWidget {
 
 class _QrScannerState extends State<QrScanner> {
   late bool sufficientCoupons = true;
-  late bool alreadyScanned = false;
 
   bool isScanCompleted = false;
   bool isFlashOn = false;
@@ -41,31 +40,29 @@ class _QrScannerState extends State<QrScanner> {
   @override
   void initState() {
     super.initState();
-    isScanCompleted = false;
   }
 
   Future<void> addUserInList(
-      String data, double scannedBy, String date1) async {
+      String data, int scannedBy, String date1) async {
     List<String> code = data.split(" ");
 
     qrscannerServices.addToList(
         context: context,
         name: code[0].toString(),
         email: code[1].toString(),
-        psNumber: double.parse(code[2].toString()),
-        vegUsers: double.parse(code[3].toString()),
-        nonVegUsers: double.parse(code[4].toString()),
-        dietUsers: double.parse(code[5].toString()),
-        totalUsers: double.parse(code[6].toString()),
+        psNumber: int.parse(code[2].toString()),
+        vegUsers: int.parse(code[3].toString()),
+        nonVegUsers: int.parse(code[4].toString()),
+        dietUsers: int.parse(code[5].toString()),
+        totalUsers: int.parse(code[6].toString()),
         scannedBy: scannedBy,
-        couponsLeft: double.parse(code[7].toString()),
+        couponsLeft: int.parse(code[7].toString()),
         date: date1);
-    isScanCompleted = false;
   }
 
   // Replace with the user's date
 
-  Future<bool> checkUser(double psNumber, String date) async {
+  Future<bool> checkUser(int psNumber, String date) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     final response = await http.post(
@@ -92,7 +89,6 @@ class _QrScannerState extends State<QrScanner> {
 
   @override
   Widget build(BuildContext context) {
-    alreadyScanned = false;
     final user = Provider.of<UserProvider>(context).user;
     return Scaffold(
       appBar: AppBar(
@@ -173,12 +169,12 @@ class _QrScannerState extends State<QrScanner> {
                         String formatter = DateFormat('yMd').format(now);
 
                         bool userScannedorNot = await checkUser(
-                            double.parse(code1[2].toString()), formatter);
+                            int.parse(code1[2].toString()), formatter);
 
                         // if (sufficientCoupons && !alreadyScanned) {
                         if (userScannedorNot ||
-                            double.parse(code1[6].toString()) >
-                                double.parse(code1[7].toString())) {
+                            int.parse(code1[6].toString()) >
+                                int.parse(code1[7].toString())) {
                           Navigator.push(
                               context,
                               MaterialPageRoute(

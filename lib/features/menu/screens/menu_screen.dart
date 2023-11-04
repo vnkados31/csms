@@ -306,7 +306,11 @@ class _MenuScreenState extends State<MenuScreen> {
                         context: context,
                         menuItem: menuItem,
                         name: editController.text,
-                        onSuccess: () {});
+                        onSuccess: () {
+                          showSnackBar(
+                              context, 'Menu Item Updated Succesfully!');
+                          Navigator.pop(context);
+                        });
                   },
                   child: const Text('Update'))
             ],

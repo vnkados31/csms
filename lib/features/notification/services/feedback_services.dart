@@ -13,7 +13,7 @@ class FeedServices {
     required BuildContext context,
     required String feedText,
     required String ratingText,
-    required double psNumber,
+    required int psNumber,
     required String date,
   }) async {
     try {

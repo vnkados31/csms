@@ -1,6 +1,7 @@
 import 'package:csm_system/features/scan_qr/services/qr_scanner_services.dart';
 import 'package:csm_system/models/qrmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../../common/widgets/loader.dart';
 import '../../../providers/user_provider.dart';
@@ -21,27 +22,21 @@ class _ScannedUsersListState extends State<ScannedUsersList> {
   @override
   void initState() {
     super.initState();
-    fetchAllScannedUsers();
   }
 
-  fetchAllScannedUsers() async {
-    scannedUsers = await adminServices.fetchAllScannedUsers(context);
+  fetchAllScannedUsers(int psNumber) async {
+    final now = new DateTime.now();
+    String formatter = DateFormat('yMd').format(now);
+    scannedUsers = await adminServices.fetchAllScannedUsers(
+        context, psNumber, formatter.toString());
     setState(() {});
-  }
-
-  filterItemsFunction(double scannedBy) async {
-    setState(() {
-      filteredItems = scannedUsers!.where((item) {
-        return item.scannedBy == scannedBy;
-      }).toList();
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).user;
 
-    filterItemsFunction(user.psNumber);
+    fetchAllScannedUsers(user.psNumber);
 
     return scannedUsers == null
         ? const Loader()
@@ -54,9 +49,9 @@ class _ScannedUsersListState extends State<ScannedUsersList> {
               ),
             ),
             body: ListView.builder(
-                itemCount: filteredItems!.length,
+                itemCount: scannedUsers!.length,
                 itemBuilder: (context, index) {
-                  final filteredUserData = filteredItems![index];
+                  final filteredUserData = scannedUsers![index];
                   return Card(
                     color: Colors.amber.shade100,
                     child: ConstrainedBox(

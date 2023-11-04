@@ -42,7 +42,7 @@ class _AuthScreenState extends State<AuthScreen> {
     authService.signUpUser(
         context: context,
         email: _emailController.text,
-        psNumber: double.parse(_psNumberController.text),
+        psNumber: int.parse(_psNumberController.text),
         name: _nameController.text,
         dob: dateInput.text);
   }
@@ -50,7 +50,7 @@ class _AuthScreenState extends State<AuthScreen> {
   void signInUser() {
     authService.signInUser(
         context: context,
-        psNumber: double.parse(_psNumberController.text),
+        psNumber: int.parse(_psNumberController.text),
         password: _passwordController.text);
   }
 

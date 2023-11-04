@@ -24,22 +24,20 @@ adminRouter.post("/admin/scan-qr", async (req, res) => {
     });
     qrcode = await qrcode.save(); 
 
-    const user =await User.findOne({psNumber});
 
-    user.couponsLeft = couponsLeft - totalUsers;
 
-    user = await user.save();
-
-    //res.json(qrcode);
+    res.json(qrcode);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
 });
 
+
 // Get all your products
-adminRouter.get("/admin/get-scanned-users", admin, async (req, res) => {
+adminRouter.post("/admin/get-scanned-users",admin, async (req, res) => {
   try {
-    const qrcode = await Qrcode.find({});
+    const { scannedBy , date} = req.body;
+    const qrcode = await Qrcode.find({scannedBy,date});
     res.json(qrcode);
   } catch (e) {
     res.status(500).json({ error: e.message });
@@ -104,6 +102,23 @@ adminRouter.get("/admin/get-menu-items", admin, async (req, res) => {
   }
 });
 
+adminRouter.post("/admin/check-food-type", async (req, res) => {
+  try {
+    const {day , type} = req.body;
+    const menuitems = await MenuItem.findOne({day : day, type : type});
+
+    if(menuitems) {
+      res.status(200).send('found data with following fields');
+    }
+    else {
+      res.status(400).send('Sorry, cant find that');
+    }
+   // res.json(menuitems);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 
 adminRouter.post('/admin/delete-menu-item', admin, async (req,res) => {
 
@@ -123,17 +138,16 @@ adminRouter.post('/admin/delete-menu-item', admin, async (req,res) => {
 adminRouter.post('/admin/update-menu-item', async (req,res) => {
   try {
     const {id,name} = req.body;
-    const menuitem = await MenuItem.findOne({id : id});
+    const menuitem = await MenuItem.findByIdAndUpdate(id, {name : name});
 
-    menuitem.name = name;
+    res.status(200).send('Success');
+    
 
-    menuitem = await menuitem.save();
-    // menuitem = await menuitem.save();
-    res.json(menuitem);
-   } catch (e) {
+  } catch (e) {
     res.status(500).json({error : e.message});
+   }
 }
 
-});
+);
 
 module.exports = adminRouter;

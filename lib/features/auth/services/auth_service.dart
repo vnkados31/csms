@@ -18,7 +18,7 @@ class AuthService {
     required BuildContext context,
     required String email,
     required String name,
-    required double psNumber,
+    required int psNumber,
     required String dob,
   }) async {
     try {
@@ -38,7 +38,7 @@ class AuthService {
           psNumber: psNumber,
           password: '',
           dob: dob,
-          couponsLeft: 0.0,
+          couponsLeft: 0,
           foodType: '',
           userType: '',
           token: '');
@@ -65,7 +65,7 @@ class AuthService {
 
   void signInUser(
       {required BuildContext context,
-      required double psNumber,
+      required int psNumber,
       required String password}) async {
     try {
       http.Response res = await http.post(Uri.parse('$uri/api/signin'),
