@@ -57,9 +57,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(
                 height: 10,
               ),
-              const Text(
-                'Vaibhav',
-                style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+              Text(
+                user.name,
+                style:
+                    const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
               ),
               Text(
                 user.psNumber.toString(),

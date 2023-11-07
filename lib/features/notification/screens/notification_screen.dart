@@ -48,7 +48,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.blue, width: 2.0),
                   image: const DecorationImage(
-                    image: AssetImage('asset/images/feedback.jpg'),
+                    image: AssetImage('asset/images/cook.png'),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -68,26 +68,20 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 minRating: 1,
                 direction: Axis.horizontal,
                 allowHalfRating: false,
-                itemCount: 5,
+                itemCount: 3,
                 itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
                 itemBuilder: (context, index) {
                   String emoji = '';
 
                   switch (index) {
                     case 0:
-                      emoji = '😠'; // Angry emoji
-                      break;
-                    case 1:
-                      emoji = '😒'; // Neutral emoji
-                      break;
-                    case 2:
                       emoji = '😐'; // Happy emoji
                       break;
-                    case 3:
+                    case 1:
                       emoji =
                           '🙂'; // Adjust this to another happy emoji or use a different one
                       break;
-                    case 4:
+                    case 2:
                       emoji =
                           '😊'; // Adjust this to another happy emoji or use a different one
                       break;

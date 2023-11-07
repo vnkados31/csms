@@ -5,9 +5,11 @@ import 'package:csm_system/features/scan_qr/screens/qr_scanner.dart';
 import 'package:csm_system/features/settings/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:provider/provider.dart';
 
 import '../../constants/global_variables.dart';
 import '../../features/profile/screens/profile_screen.dart';
+import '../../providers/user_provider.dart';
 
 class BottomBar extends StatefulWidget {
   static const String routeName = '/actual-home';
@@ -67,6 +69,7 @@ class _BottomBarState extends State<BottomBar> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context).user;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -81,7 +84,8 @@ class _BottomBarState extends State<BottomBar> {
                   'Profile',
                   'Settings',
                   // 'Analytics',
-                  'QrScanner',
+                  if (user.userType == 'admin' || user.userType == 'officeBoy')
+                    'QrScanner',
                   'Log Out'
                 }.map((String choice) {
                   return PopupMenuItem<String>(

@@ -226,7 +226,7 @@ class _MenuScreenState extends State<MenuScreen> {
                           //   ),
                           // ),
                           trailing: Visibility(
-                            visible: (user.userType == 'user' ||
+                            visible: (user.userType == 'admin' ||
                                 user.userType ==
                                     'super_admin'), // Change 'admin' to the actual userType condition
                             child: PopupMenuButton(
@@ -263,7 +263,7 @@ class _MenuScreenState extends State<MenuScreen> {
           ],
         ),
         floatingActionButton: Visibility(
-          visible: (user.userType == 'user' || user.userType == 'super_admin'),
+          visible: (user.userType == 'admin' || user.userType == 'super_admin'),
           child: Padding(
             padding: const EdgeInsets.only(bottom: 60),
             child: FloatingActionButton(
