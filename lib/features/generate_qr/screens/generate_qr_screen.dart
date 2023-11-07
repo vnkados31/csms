@@ -65,7 +65,6 @@ class _GenerateQrScreenState extends State<GenerateQrScreen> {
   void checkFoodType() async {
     DateTime date = DateTime.now();
     String weekDay = DateFormat('EEEE').format(date);
-    print("day $weekDay");
     nonVegData = await menuServices.checkFoodType(
         context: context, selectedDay: weekDay, foodType: "NonVeg");
     dietData = await menuServices.checkFoodType(
@@ -147,7 +146,8 @@ class _GenerateQrScreenState extends State<GenerateQrScreen> {
                           borderRadius:
                               const BorderRadius.all(Radius.circular(10)),
                           style: const TextStyle(
-                              fontSize: 30, color: Colors.black),
+                              fontSize: 30,
+                              color: Color.fromARGB(255, 33, 32, 32)),
                           value: selectedDiet,
                           onChanged: (UserDiet? newValue) {
                             setState(() {
@@ -175,7 +175,6 @@ class _GenerateQrScreenState extends State<GenerateQrScreen> {
                         ElevatedButton(
                           onPressed: decrementUsers,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.amberAccent,
                             shape: const CircleBorder(),
                             padding: EdgeInsets.all(buttonSize * 0.4),
                           ),
@@ -191,7 +190,6 @@ class _GenerateQrScreenState extends State<GenerateQrScreen> {
                         ElevatedButton(
                           onPressed: incrementUsers,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.amberAccent,
                             shape: const CircleBorder(),
                             padding: EdgeInsets.all(buttonSize * 0.4),
                           ),
@@ -250,7 +248,6 @@ class _GenerateQrScreenState extends State<GenerateQrScreen> {
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.amberAccent,
                       padding: EdgeInsets.symmetric(
                         horizontal: screenWidth * 0.1,
                         vertical: screenHeight * 0.03,

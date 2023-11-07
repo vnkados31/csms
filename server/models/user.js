@@ -41,7 +41,7 @@ const userSchema = mongoose.Schema({
     },
     couponsLeft : {
         type: Number,
-        default : '25'
+        default : 25
     },
     password : {
         required : true,

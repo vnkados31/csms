@@ -59,6 +59,34 @@ class QrScannerServices {
     }
   }
 
+  void deductCoupons(
+      {required BuildContext context,
+      required int psNumber,
+      required int totalUsers}) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    try {
+      http.Response res = await http.post(
+        Uri.parse('$uri/api/deduct-coupons'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': userProvider.user.token,
+        },
+        body: jsonEncode({"psNumber": psNumber, "couponsToDeduct": totalUsers}),
+      );
+
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () {
+          showSnackBar(context, "Coupons deducted successfully");
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+  }
+
   Future<List<Qrmodel>> fetchAllScannedUsers(
       BuildContext context, int psNumber, String day) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);

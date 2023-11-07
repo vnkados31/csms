@@ -19,7 +19,7 @@ const admin = async (req,res,next) => {
         // if (user.type == "user") {
         //     return res.status(401).json({ msg: "You are not an admin!" });
         //   }
-        req.user = verified.indexOf;
+        req.user = verified.id;
         req.token = token;
         next();
     } catch (e) {

@@ -35,7 +35,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'CSM Updated',
+      title: 'CSM System',
       theme: ThemeData(
           scaffoldBackgroundColor: GlobalVariables.backgroundColor,
           colorScheme:

@@ -84,6 +84,32 @@ settingsRouter.post('/api/change-food-type', async (req, res) => {
     }
   });
 
+  settingsRouter.post("/api/deduct-coupons" , async (req, res) => {
+ 
+
+    const { psNumber, couponsToDeduct} = req.body;
+  
+    try {
+      const user = await User.findOne({ psNumber: psNumber });
+  
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+  
+      if (user.couponsLeft < couponsToDeduct) {
+        return res.status(400).json({ error: 'Insufficient coupons' });
+      }
+  
+      // Deduct coupons
+      user.couponsLeft -= couponsToDeduct;
+      await user.save();
+  
+      return res.status(200).json({ message: 'Coupons deducted successfully' });
+    } catch (error) {
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+
   settingsRouter.put('/api/add-coupons/:psNumber', async (req, res) => {
   
     const psNumber = req.params.psNumber;

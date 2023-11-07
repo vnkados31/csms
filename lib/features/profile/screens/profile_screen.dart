@@ -2,10 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../providers/user_provider.dart';
+import '../../auth/services/auth_service.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   static const String routeName = '/profile';
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  final AuthService authService = AuthService();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    authService.getUserData(context);
+  }
 
   @override
   Widget build(BuildContext context) {

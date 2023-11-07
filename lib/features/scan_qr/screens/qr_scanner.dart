@@ -42,8 +42,7 @@ class _QrScannerState extends State<QrScanner> {
     super.initState();
   }
 
-  Future<void> addUserInList(
-      String data, int scannedBy, String date1) async {
+  Future<void> addUserInList(String data, int scannedBy, String date1) async {
     List<String> code = data.split(" ");
 
     qrscannerServices.addToList(
@@ -58,6 +57,11 @@ class _QrScannerState extends State<QrScanner> {
         scannedBy: scannedBy,
         couponsLeft: int.parse(code[7].toString()),
         date: date1);
+  }
+
+  Future<void> deductCoupons(int psNumber, int totalUsers) async {
+    qrscannerServices.deductCoupons(
+        context: context, psNumber: psNumber, totalUsers: totalUsers);
   }
 
   // Replace with the user's date
@@ -183,6 +187,9 @@ class _QrScannerState extends State<QrScanner> {
                                       )));
                         } else {
                           await addUserInList(code, user.psNumber, formatter);
+
+                          await deductCoupons(int.parse(code1[2].toString()),
+                              int.parse(code1[6].toString()));
                           Navigator.push(
                               context,
                               MaterialPageRoute(
