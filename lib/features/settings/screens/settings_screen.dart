@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:csm_system/features/hr_report/services/hr_services.dart';
 import 'package:csm_system/features/profile/screens/profile_screen.dart';
 import 'package:csm_system/features/settings/services/settings_services.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../constants/global_variables.dart';
@@ -20,6 +22,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   final SettingsServices settingServices = SettingsServices();
+  final HrSevices hrSevices = HrSevices();
 
   void _showAlertDialog(BuildContext context, String foodType) {
     showDialog(
@@ -35,6 +38,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   // }
 
   Future<void> addCoupons(int psNumber) async {
+    var now = DateTime.now();
+    var formatter = DateFormat('yyyy-MM-dd');
+    String formattedDate = formatter.format(now);
     final response = await http.put(
       Uri.parse('$uri/api/add-coupons/$psNumber'),
       headers: {
@@ -52,6 +58,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
         showSnackBar(context, 'Coupons not added!');
       });
     }
+
+    hrSevices.addCouponsBookRecord(
+        context: context,
+        psNumber: psNumber,
+        date: formattedDate,
+        onSuccess: () {});
   }
 
   @override

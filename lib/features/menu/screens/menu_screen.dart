@@ -178,6 +178,7 @@ class _MenuScreenState extends State<MenuScreen> {
                   ),
                 ),
               ],
+              
             ),
             const SizedBox(
               height: 10,

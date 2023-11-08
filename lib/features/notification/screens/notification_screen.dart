@@ -34,104 +34,106 @@ class _NotificationScreenState extends State<NotificationScreen> {
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).user;
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Animated Photo in Circle
-              Container(
-                width: 150,
-                height: 150,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.blue, width: 2.0),
-                  image: const DecorationImage(
-                    image: AssetImage('asset/images/cook.png'),
-                    fit: BoxFit.cover,
+      body: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Animated Photo in Circle
+                Container(
+                  width: 150,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.blue, width: 2.0),
+                    image: const DecorationImage(
+                      image: AssetImage('asset/images/cook.png'),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
-              ),
 
-              // Text: How was today's food
-              const SizedBox(height: 20),
-              const Text(
-                'How was today\'s food?',
-                style: TextStyle(fontSize: 18),
-              ),
+                // Text: How was today's food
+                const SizedBox(height: 20),
+                const Text(
+                  'How was today\'s food?',
+                  style: TextStyle(fontSize: 18),
+                ),
 
-              // Rating Bar
-              const SizedBox(height: 20),
-              RatingBar.builder(
-                initialRating: _rating,
-                minRating: 1,
-                direction: Axis.horizontal,
-                allowHalfRating: false,
-                itemCount: 3,
-                itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-                itemBuilder: (context, index) {
-                  String emoji = '';
+                // Rating Bar
+                const SizedBox(height: 20),
+                RatingBar.builder(
+                  initialRating: _rating,
+                  minRating: 1,
+                  direction: Axis.horizontal,
+                  allowHalfRating: false,
+                  itemCount: 3,
+                  itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  itemBuilder: (context, index) {
+                    String emoji = '';
 
-                  switch (index) {
-                    case 0:
-                      emoji = '😐'; // Happy emoji
-                      break;
-                    case 1:
-                      emoji =
-                          '🙂'; // Adjust this to another happy emoji or use a different one
-                      break;
-                    case 2:
-                      emoji =
-                          '😊'; // Adjust this to another happy emoji or use a different one
-                      break;
-                    default:
-                      break;
-                  }
+                    switch (index) {
+                      case 0:
+                        emoji = '😐'; // Happy emoji
+                        break;
+                      case 1:
+                        emoji =
+                            '🙂'; // Adjust this to another happy emoji or use a different one
+                        break;
+                      case 2:
+                        emoji =
+                            '😊'; // Adjust this to another happy emoji or use a different one
+                        break;
+                      default:
+                        break;
+                    }
 
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _rating = index + 1; // Set the selected rating
-                      });
-                    },
-                    child: RichText(
-                      text: TextSpan(
-                        text: emoji,
-                        style: TextStyle(
-                          fontSize: _rating == index + 1.0 ? 30.0 : 24.0,
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _rating = index + 1; // Set the selected rating
+                        });
+                      },
+                      child: RichText(
+                        text: TextSpan(
+                          text: emoji,
+                          style: TextStyle(
+                            fontSize: _rating == index + 1.0 ? 30.0 : 24.0,
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
-                onRatingUpdate: (rating) {
-                  setState(() {
-                    _rating = rating;
-                  });
-                },
-              ),
-
-              // TextBox for Custom Review and Feedback
-              const SizedBox(height: 20),
-              TextField(
-                controller: _feedbackController,
-                maxLines: 3,
-                decoration: const InputDecoration(
-                  hintText: 'Write your feedback here...',
-                  border: OutlineInputBorder(),
+                    );
+                  },
+                  onRatingUpdate: (rating) {
+                    setState(() {
+                      _rating = rating;
+                    });
+                  },
                 ),
-              ),
 
-              // Submit Button
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  sendFeedback(user.psNumber);
-                },
-                child: const Text('Submit Feedback'),
-              ),
-            ],
+                // TextBox for Custom Review and Feedback
+                const SizedBox(height: 20),
+                TextField(
+                  controller: _feedbackController,
+                  maxLines: 3,
+                  decoration: const InputDecoration(
+                    hintText: 'Write your feedback here...',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+
+                // Submit Button
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    sendFeedback(user.psNumber);
+                  },
+                  child: const Text('Submit Feedback'),
+                ),
+              ],
+            ),
           ),
         ),
       ),

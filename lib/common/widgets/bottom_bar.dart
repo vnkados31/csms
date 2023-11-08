@@ -1,4 +1,5 @@
 import 'package:csm_system/features/generate_qr/screens/generate_qr_screen.dart';
+import 'package:csm_system/features/hr_report/screens/hr_report_download.dart';
 import 'package:csm_system/features/menu/screens/menu_screen.dart';
 import 'package:csm_system/features/notification/screens/notification_screen.dart';
 import 'package:csm_system/features/scan_qr/screens/qr_scanner.dart';
@@ -58,6 +59,12 @@ class _BottomBarState extends State<BottomBar> {
           MaterialPageRoute(builder: (context) => const QrScanner()),
         );
         break;
+      case 'HR Report':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HrReportDownload()),
+        );
+        break;
       case 'LogOut':
         Navigator.push(
           context,
@@ -86,6 +93,7 @@ class _BottomBarState extends State<BottomBar> {
                   // 'Analytics',
                   if (user.userType == 'admin' || user.userType == 'officeBoy')
                     'QrScanner',
+                  'HR Report',
                   'Log Out'
                 }.map((String choice) {
                   return PopupMenuItem<String>(

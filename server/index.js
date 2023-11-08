@@ -6,6 +6,7 @@ const authRouter = require('./routes/auth');
 const adminRouter = require('./routes/admin');
 const settingsRouter = require('./routes/settings'); 
 const feedbackRouter = require('./routes/feedback');
+const hrrouter = require('./routes/hrreport');
 
 const PORT = 3000;
 const app = express();
@@ -17,6 +18,7 @@ app.use(authRouter);
 app.use(adminRouter);
 app.use(settingsRouter);
 app.use(feedbackRouter);
+app.use(hrrouter);
 
 
 mongoose.connect(DB).then( () => {
