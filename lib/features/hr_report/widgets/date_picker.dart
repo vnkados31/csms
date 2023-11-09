@@ -16,7 +16,7 @@ class _DatePickerExampleState extends State<DatePickerExample> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: widget.selectedDate,
-      firstDate: DateTime(2000),
+      firstDate: DateTime(1950),
       lastDate: DateTime(2101),
     );
     if (picked != null && picked != widget.selectedDate) {
@@ -31,10 +31,11 @@ class _DatePickerExampleState extends State<DatePickerExample> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           Text(
             DateFormat('yyyy-MM-dd').format(widget.selectedDate),
-            style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 25),
           ),
           const SizedBox(
             width: 20.0,

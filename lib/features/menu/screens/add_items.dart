@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:csm_system/common/widgets/custom_button.dart';
 import 'package:csm_system/features/menu/services/menu_services.dart';
 import 'package:flutter/material.dart';
 
@@ -40,8 +41,8 @@ class _AddItemScreenState extends State<AddItemScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          // title: Text('Add Item (${widget.userType})'),
-          ),
+        title: Text('Add Item (${widget.dropdownValue})'),
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
@@ -58,36 +59,18 @@ class _AddItemScreenState extends State<AddItemScreen> {
             const SizedBox(
               height: 30,
             ),
-            ElevatedButton.icon(
-              onPressed: () {
-                setState(() {
-                  loading = true;
-                });
+            CustomButton(
+                text: 'Add',
+                onTap: () {
+                  setState(() {
+                    loading = true;
+                  });
 
-                addMenuItem();
-                loading = false;
+                  addMenuItem();
+                  loading = false;
 
-                widget.initFunction();
-              },
-              icon: const Icon(Icons.arrow_forward),
-              label: const Text(
-                'Add',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.amberAccent,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 15,
-                  vertical: 15,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-              ),
-            ),
+                  widget.initFunction();
+                })
           ],
         ),
       ),

@@ -1,3 +1,4 @@
+import 'package:csm_system/common/widgets/custom_button.dart';
 import 'package:csm_system/features/hr_report/services/hr_services.dart';
 import 'package:csm_system/features/hr_report/widgets/date_picker.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +41,7 @@ class _HrReportDownloadState extends State<HrReportDownload> {
     final user = Provider.of<UserProvider>(context).user;
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: const Text('Download Report'),
       ),
       body: Container(
@@ -49,7 +51,7 @@ class _HrReportDownloadState extends State<HrReportDownload> {
           children: [
             const Text(
               'From',
-              style: TextStyle(fontSize: 20),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(
               height: 5,
@@ -67,7 +69,7 @@ class _HrReportDownloadState extends State<HrReportDownload> {
             ),
             const Text(
               'To',
-              style: TextStyle(fontSize: 20),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(
               height: 5,
@@ -83,21 +85,12 @@ class _HrReportDownloadState extends State<HrReportDownload> {
             const SizedBox(
               height: 10,
             ),
-            Center(
-              child: SizedBox(
-                height: 40,
-                width: 200,
-                child: ElevatedButton(
-                    onPressed: () async {
-                      sendReportToHr(user.email);
-                      Navigator.pop(context);
-                    },
-                    child: const Text(
-                      'Send',
-                      style: TextStyle(fontSize: 30),
-                    )),
-              ),
-            )
+            CustomButton(
+                text: 'Send',
+                onTap: () async {
+                  sendReportToHr(user.email);
+                  Navigator.pop(context);
+                })
           ],
         ),
       ),

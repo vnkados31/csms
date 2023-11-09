@@ -44,31 +44,4 @@ class SettingsServices {
       showSnackBar(context, e.toString());
     }
   }
-
-  void addCoupons(
-      {required BuildContext context,
-      required User user,
-      required VoidCallback onSuccess}) async {
-    try {
-      final userProvider = Provider.of<UserProvider>(context, listen: false);
-      http.Response res = await http.put(
-        Uri.parse('$uri/api/add-coupons'),
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-          'x-auth-token': userProvider.user.token,
-        },
-        body: jsonEncode({'psNumber': user.psNumber}),
-      );
-
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () {
-          onSuccess();
-        },
-      );
-    } catch (e) {
-      showSnackBar(context, e.toString());
-    }
-  }
 }

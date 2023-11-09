@@ -1,6 +1,9 @@
 import 'dart:convert';
 
+import 'package:csm_system/common/widgets/custom_button.dart';
+import 'package:csm_system/features/scan_qr/screens/snacks_result.dart';
 import 'package:csm_system/features/scan_qr/services/qr_scanner_services.dart';
+import 'package:csm_system/features/scan_qr/services/snacks_qr_scanner.dart';
 import 'package:csm_system/features/user_list/screens/scanned_users_list.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -30,8 +33,11 @@ class _QrScannerState extends State<QrScanner> {
   bool isScanCompleted = false;
   bool isFlashOn = false;
   bool isFrontCamera = false;
+  late bool isSnacksTime = false;
   MobileScannerController controller = MobileScannerController();
   final QrScannerServices qrscannerServices = QrScannerServices();
+  final SnacksQrScannerServices snacksQrScannerServices =
+      SnacksQrScannerServices();
 
   void closeScreen() {
     isScanCompleted = false;
@@ -40,6 +46,7 @@ class _QrScannerState extends State<QrScanner> {
   @override
   void initState() {
     super.initState();
+    checkSnacksTime();
   }
 
   Future<void> addUserInList(String data, int scannedBy, String date1) async {
@@ -89,6 +96,64 @@ class _QrScannerState extends State<QrScanner> {
       showSnackBar(context, '${response.statusCode}');
       return false;
     }
+  }
+
+  Future<bool> snacksScannedUser(int psNumber, String date) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    final response = await http.post(
+      Uri.parse('$uri/snacks/check-scanned-user'),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-auth-token': userProvider.user.token,
+      },
+      body: jsonEncode({'psNumber': psNumber, 'date': date}),
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      if (data["found"] == true) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      showSnackBar(context, '${response.statusCode}');
+      return false;
+    }
+  }
+
+  Future<void> addUserInSnacksList(
+      String data, int scannedBy, String date1) async {
+    List<String> code = data.split(" ");
+
+    // print("personname ${code[0].toString()}");
+
+    snacksQrScannerServices.addToSnacksList(
+      context: context,
+      name: code[0].toString(),
+      psNumber: int.parse(code[2].toString()),
+      scannedBy: scannedBy,
+      date: date1,
+    );
+  }
+
+  void checkSnacksTime() {
+    DateTime now = DateTime.now();
+
+    // Define the target time range
+    TimeOfDay startTime = const TimeOfDay(hour: 15, minute: 0); // 3:00 PM
+    TimeOfDay endTime = const TimeOfDay(hour: 19, minute: 0); // 7:00 PM
+
+    // Convert the current time and target times to Duration for comparison
+    Duration currentTime = Duration(hours: now.hour, minutes: now.minute);
+    Duration startDuration =
+        Duration(hours: startTime.hour, minutes: startTime.minute);
+    Duration endDuration =
+        Duration(hours: endTime.hour, minutes: endTime.minute);
+
+    // Check if the current time is within the target range
+    isSnacksTime = currentTime >= startDuration && currentTime <= endDuration;
   }
 
   @override
@@ -169,34 +234,60 @@ class _QrScannerState extends State<QrScanner> {
                         List<String> code1 = code.split(" ");
                         isScanCompleted = true;
 
-                        final now = new DateTime.now();
+                        final now = DateTime.now();
                         String formatter = DateFormat('yMd').format(now);
 
-                        bool userScannedorNot = await checkUser(
-                            int.parse(code1[2].toString()), formatter);
+                        if (isSnacksTime) {
+                          bool userScannedorNot = await snacksScannedUser(
+                              int.parse(code1[2].toString()), formatter);
 
-                        // if (sufficientCoupons && !alreadyScanned) {
-                        if (userScannedorNot ||
-                            int.parse(code1[6].toString()) >
-                                int.parse(code1[7].toString())) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => NoSufficientCoupons(
-                                        closeScreen: closeScreen,
-                                      )));
+                          // if (sufficientCoupons && !alreadyScanned) {
+                          if (userScannedorNot) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => NoSufficientCoupons(
+                                          closeScreen: closeScreen,
+                                        )));
+                          } else {
+                            await addUserInSnacksList(
+                                code, user.psNumber, formatter);
+
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SnacksResult(
+                                          closeScreen: closeScreen,
+                                          code: code,
+                                        )));
+                          }
                         } else {
-                          await addUserInList(code, user.psNumber, formatter);
+                          bool userScannedorNot = await checkUser(
+                              int.parse(code1[2].toString()), formatter);
 
-                          await deductCoupons(int.parse(code1[2].toString()),
-                              int.parse(code1[6].toString()));
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ResultScreen(
-                                        closeScreen: closeScreen,
-                                        code: code,
-                                      )));
+                          // if (sufficientCoupons && !alreadyScanned) {
+                          if (userScannedorNot ||
+                              int.parse(code1[6].toString()) >
+                                  int.parse(code1[7].toString())) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => NoSufficientCoupons(
+                                          closeScreen: closeScreen,
+                                        )));
+                          } else {
+                            await addUserInList(code, user.psNumber, formatter);
+
+                            await deductCoupons(int.parse(code1[2].toString()),
+                                int.parse(code1[6].toString()));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ResultScreen(
+                                          closeScreen: closeScreen,
+                                          code: code,
+                                        )));
+                          }
                         }
                       }
                     },
@@ -208,41 +299,21 @@ class _QrScannerState extends State<QrScanner> {
                 ],
               )),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
-            Expanded(
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  // String currentUserUid = _user!.uid;
-                  // //print(currentUserUid);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ScannedUsersList(),
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.arrow_forward),
-                label: const Text(
-                  'Proceed',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.amberAccent,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 15,
-                    vertical: 15,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-              ),
-            ),
+            isSnacksTime
+                ? Container()
+                : CustomButton(
+                    text: 'Proceed',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ScannedUsersList(),
+                        ),
+                      );
+                    })
           ],
         ),
       ),

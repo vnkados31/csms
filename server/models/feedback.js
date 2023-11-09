@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const feedbackSchema= new mongoose.Schema({
     feedText:{
         type:String,
-        required:true
 
     },
     ratingText:{

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:csm_system/features/auth/screens/auth_screen.dart';
 import 'package:csm_system/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -131,6 +132,23 @@ class AuthService {
         var userProvider = Provider.of<UserProvider>(context, listen: false);
         userProvider.setUser(userRes.body);
       }
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+  }
+
+  void logoutUser(BuildContext context) async {
+    try {
+      SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+
+      await sharedPreferences.setString('x-auth-token', '');
+
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        AuthScreen.routeName,
+        (route) => false,
+      ); // Change to your login screen route
     } catch (e) {
       showSnackBar(context, e.toString());
     }

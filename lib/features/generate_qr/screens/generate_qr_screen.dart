@@ -1,3 +1,4 @@
+import 'package:csm_system/common/widgets/custom_button.dart';
 import 'package:csm_system/features/generate_qr/screens/qr_screen.dart';
 import 'package:csm_system/providers/user_provider.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,7 @@ class _GenerateQrScreenState extends State<GenerateQrScreen> {
   late bool vegData = true;
   late bool nonVegData = false;
   late bool dietData = false;
+  late bool isSnacksTime = false;
 
   final MenuServices menuServices = MenuServices();
 
@@ -59,6 +61,7 @@ class _GenerateQrScreenState extends State<GenerateQrScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    checkSnacksTime();
     checkFoodType();
   }
 
@@ -73,6 +76,24 @@ class _GenerateQrScreenState extends State<GenerateQrScreen> {
     setState(() {});
   }
 
+  void checkSnacksTime() {
+    DateTime now = DateTime.now();
+
+    // Define the target time range
+    TimeOfDay startTime = const TimeOfDay(hour: 15, minute: 0); // 3:00 PM
+    TimeOfDay endTime = const TimeOfDay(hour: 19, minute: 0); // 7:00 PM
+
+    // Convert the current time and target times to Duration for comparison
+    Duration currentTime = Duration(hours: now.hour, minutes: now.minute);
+    Duration startDuration =
+        Duration(hours: startTime.hour, minutes: startTime.minute);
+    Duration endDuration =
+        Duration(hours: endTime.hour, minutes: endTime.minute);
+
+    // Check if the current time is within the target range
+    isSnacksTime = currentTime >= startDuration && currentTime <= endDuration;
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).user;
@@ -80,30 +101,41 @@ class _GenerateQrScreenState extends State<GenerateQrScreen> {
     name = user.name;
     email = user.email;
 
-    List<DropdownMenuItem<UserDiet>> dropdownItems = [
-      const DropdownMenuItem<UserDiet>(
-        value: UserDiet.veg,
-        child: Center(child: Text('Veg')),
-      ),
-    ];
+    List<DropdownMenuItem<UserDiet>> dropdownItems;
 
-    if (nonVegData) {
-      // Add the "Non-Veg" item only if it's not Wednesday, Friday, or Saturday.
-      dropdownItems.add(
+    if (isSnacksTime) {
+      dropdownItems = [
         const DropdownMenuItem<UserDiet>(
-          value: UserDiet.nonVeg,
-          child: Center(child: Text('Non-Veg')),
+          value: UserDiet.veg,
+          child: Center(child: Text('Snakcs')),
         ),
-      );
-    }
+      ];
+    } else {
+      dropdownItems = [
+        const DropdownMenuItem<UserDiet>(
+          value: UserDiet.veg,
+          child: Center(child: Text('Veg')),
+        ),
+      ];
 
-    if (dietData) {
-      dropdownItems.addAll([
-        const DropdownMenuItem<UserDiet>(
-          value: UserDiet.diet,
-          child: Center(child: Text('Diet')),
-        ),
-      ]);
+      if (nonVegData) {
+        // Add the "Non-Veg" item only if it's not Wednesday, Friday, or Saturday.
+        dropdownItems.add(
+          const DropdownMenuItem<UserDiet>(
+            value: UserDiet.nonVeg,
+            child: Center(child: Text('Non-Veg')),
+          ),
+        );
+      }
+
+      if (dietData) {
+        dropdownItems.addAll([
+          const DropdownMenuItem<UserDiet>(
+            value: UserDiet.diet,
+            child: Center(child: Text('Diet')),
+          ),
+        ]);
+      }
     }
 
     return Scaffold(
@@ -111,20 +143,20 @@ class _GenerateQrScreenState extends State<GenerateQrScreen> {
       body: LayoutBuilder(
         builder: (context, constraints) {
           final screenHeight = constraints.maxHeight;
-          final screenWidth = constraints.maxWidth;
           final buttonSize = screenHeight * 0.1;
           final mainCounterSize = screenHeight * 0.13;
 
           return Container(
             child: Center(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(height: screenHeight * 0.05),
                   const Text(
                     'Select Users',
                     style: TextStyle(
                       color: Colors.black,
-                      fontSize: 50,
+                      fontSize: 40,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -199,64 +231,52 @@ class _GenerateQrScreenState extends State<GenerateQrScreen> {
                     ),
                   ),
                   SizedBox(height: screenHeight * 0.05),
-                  Column(
-                    children: [
-                      const Text(
-                        'Total Users',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+                  isSnacksTime
+                      ? Container()
+                      : Column(
+                          children: [
+                            const Text(
+                              'Total Users',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Veg: $vegUsers, Non-Veg: $nonVegUsers, Diet: $dietUsers',
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Total: $totalUsers',
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Veg: $vegUsers, Non-Veg: $nonVegUsers, Diet: $dietUsers',
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Total: $totalUsers',
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ],
-                  ),
                   SizedBox(height: screenHeight * 0.05),
-                  ElevatedButton.icon(
-                    onPressed: () async {
-                      assingningData(user.psNumber, user.couponsLeft);
+                  CustomButton(
+                      text: 'Proceed',
+                      onTap: () {
+                        if (totalUsers > 0) {
+                          assingningData(user.psNumber, user.couponsLeft);
 
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => QrScreen(itemList: dataToSend),
-                        ),
-                      );
-                    },
-                    icon: const Icon(Icons.arrow_forward),
-                    label: Text(
-                      'Proceed',
-                      style: TextStyle(
-                        fontSize: screenWidth * 0.06,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: screenWidth * 0.1,
-                        vertical: screenHeight * 0.03,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                    ),
-                  ),
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  QrScreen(itemList: dataToSend),
+                            ),
+                          );
+                        }
+                      })
                 ],
               ),
             ),

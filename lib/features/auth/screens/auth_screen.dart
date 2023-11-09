@@ -1,4 +1,5 @@
 //import 'package:csm_system/features/auth/widgets/date_picker.dart';
+import 'package:csm_system/features/hr_report/widgets/date_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -28,6 +29,8 @@ class _AuthScreenState extends State<AuthScreen> {
   final TextEditingController _nameController = TextEditingController();
   TextEditingController dateInput = TextEditingController();
 
+  DateTime selectedDate = DateTime.now();
+
   @override
   void dispose() {
     super.dispose();
@@ -39,12 +42,13 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   void signUpUser() {
+    String formattedDate = DateFormat('dd-MM-yyyy').format(selectedDate);
     authService.signUpUser(
         context: context,
         email: _emailController.text,
         psNumber: int.parse(_psNumberController.text),
         name: _nameController.text,
-        dob: dateInput.text);
+        dob: formattedDate);
   }
 
   void signInUser() {
@@ -75,7 +79,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     : GlobalVariables.greyBackgroundCOlor,
                 title: const Text(
                   'Create Account',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
                 ),
                 leading: Radio<Auth>(
                   activeColor: GlobalVariables.secondaryColor,
@@ -118,43 +122,36 @@ class _AuthScreenState extends State<AuthScreen> {
                           height: 10,
                         ),
                         Container(
-                          padding: const EdgeInsets.all(15),
-                          height: MediaQuery.of(context).size.width / 3,
-                          child: Center(
-                            child: TextField(
-                              controller: dateInput,
-                              //editing controller of this TextField
-                              decoration: const InputDecoration(
-                                  icon: Icon(Icons
-                                      .calendar_today), //icon of text field
-                                  labelText: "Enter Date" //label text of field
-                                  ),
-                              readOnly: true,
-                              //set it true, so that user will not able to edit text
-                              onTap: () async {
-                                DateTime? pickedDate = await showDatePicker(
-                                    context: context,
-                                    initialDate: DateTime.now(),
-                                    firstDate: DateTime(1950),
-                                    //DateTime.now() - not to allow to choose before today.
-                                    lastDate: DateTime(2100));
-
-                                if (pickedDate != null) {
-                                  print(
-                                      pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
-                                  String formattedDate =
-                                      DateFormat('dd-MM-yyyy')
-                                          .format(pickedDate);
-                                  print(
-                                      formattedDate); //formatted date output using intl package =>  2021-03-16
-                                  setState(() {
-                                    dateInput.text =
-                                        formattedDate; //set output date to TextField value.
-                                  });
-                                } else {}
-                              },
+                          padding: const EdgeInsets.all(5),
+                          height: 70,
+                          decoration: BoxDecoration(
+                            // Set the background color
+                            borderRadius:
+                                BorderRadius.circular(5), // Add rounded corners
+                            border: Border.all(
+                              color: const Color.fromARGB(255, 50, 49,
+                                  49), // Add a border with a specific color
+                              // Set the border width
                             ),
                           ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              const Text('DOB: '),
+                              DatePickerExample(
+                                selectedDate: selectedDate,
+                                onDateSelected: (newDate) {
+                                  setState(() {
+                                    selectedDate =
+                                        newDate; // Update selectedDate1
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
                         ),
                         CustomButton(
                             text: "Sign UP",
@@ -173,7 +170,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     : GlobalVariables.greyBackgroundCOlor,
                 title: const Text(
                   'Sign-In Account',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
                 ),
                 leading: Radio<Auth>(
                   activeColor: GlobalVariables.secondaryColor,

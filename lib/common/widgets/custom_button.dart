@@ -7,11 +7,20 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onTap,
-      style: ElevatedButton.styleFrom(
-          minimumSize: const Size(double.infinity, 50)),
-      child: Text(text),
+    return Container(
+      padding: const EdgeInsets.only(right: 70, left: 70),
+      child: ElevatedButton(
+        onPressed: onTap,
+        style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            minimumSize: const Size(200, 60)),
+        child: Text(
+          text,
+          style: const TextStyle(fontSize: 25),
+        ),
+      ),
     );
   }
 }

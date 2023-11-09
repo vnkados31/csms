@@ -9,6 +9,7 @@ import 'package:badges/badges.dart' as badges;
 import 'package:provider/provider.dart';
 
 import '../../constants/global_variables.dart';
+import '../../features/auth/services/auth_service.dart';
 import '../../features/profile/screens/profile_screen.dart';
 import '../../providers/user_provider.dart';
 
@@ -24,6 +25,8 @@ class _BottomBarState extends State<BottomBar> {
   int _page = 1;
   double bottomBarWidth = 70;
   double bottomBarBorderWidth = 5;
+
+  // final AuthService authService = AuthService();
 
   List<Widget> pages = [
     const MenuScreen(),
@@ -62,14 +65,11 @@ class _BottomBarState extends State<BottomBar> {
       case 'HR Report':
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HrReportDownload()),
+          MaterialPageRoute(builder: (context) => const HrReportDownload()),
         );
         break;
       case 'LogOut':
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const ProfileScreen()),
-        );
+        AuthService().logoutUser(context);
         break;
     }
   }
@@ -93,8 +93,9 @@ class _BottomBarState extends State<BottomBar> {
                   // 'Analytics',
                   if (user.userType == 'admin' || user.userType == 'officeBoy')
                     'QrScanner',
-                  'HR Report',
-                  'Log Out'
+                  if (user.userType == 'super_admin' || user.userType == 'hr')
+                    'HR Report',
+                  'LogOut'
                 }.map((String choice) {
                   return PopupMenuItem<String>(
                     value: choice,

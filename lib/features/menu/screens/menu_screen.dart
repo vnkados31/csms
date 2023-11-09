@@ -178,7 +178,6 @@ class _MenuScreenState extends State<MenuScreen> {
                   ),
                 ),
               ],
-              
             ),
             const SizedBox(
               height: 10,
@@ -266,7 +265,7 @@ class _MenuScreenState extends State<MenuScreen> {
         floatingActionButton: Visibility(
           visible: (user.userType == 'admin' || user.userType == 'super_admin'),
           child: Padding(
-            padding: const EdgeInsets.only(bottom: 60),
+            padding: const EdgeInsets.only(bottom: 30),
             child: FloatingActionButton(
               onPressed: () {
                 navigateToSecondScreen(context);

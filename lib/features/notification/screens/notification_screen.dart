@@ -1,3 +1,4 @@
+import 'package:csm_system/common/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
@@ -65,6 +66,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 // Rating Bar
                 const SizedBox(height: 20),
                 RatingBar.builder(
+                  itemSize: 70,
                   initialRating: _rating,
                   minRating: 1,
                   direction: Axis.horizontal,
@@ -126,12 +128,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
                 // Submit Button
                 const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    sendFeedback(user.psNumber);
-                  },
-                  child: const Text('Submit Feedback'),
-                ),
+                CustomButton(
+                    text: 'Submit',
+                    onTap: () {
+                      sendFeedback(user.psNumber);
+                    })
               ],
             ),
           ),

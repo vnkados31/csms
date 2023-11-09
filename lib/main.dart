@@ -25,6 +25,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
+
   final AuthService authService = AuthService();
   @override
   void initState() {
@@ -35,6 +36,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'CSM System',
       theme: ThemeData(
           scaffoldBackgroundColor: GlobalVariables.backgroundColor,

@@ -33,34 +33,6 @@ settingsRouter.post('/api/change-food-type', async (req, res) => {
     }
   });
 
-  // settingsRouter.put('/api/add-coupons', async (req, res) => {
-  //   try {
-  //     const { psNumber } = req.body;
-  
-  //     if (typeof psNumber !== 'number') {
-  //       return res.status(400).json({ error: 'Invalid data type for psNumber' });
-  //     }
-  
-  //     let user = await User.findOne({ psNumber });
-  
-  //     if (!user) {
-  //       return res.status(404).json({ error: 'User not found' });
-  //     }
-  
-  //     // Ensure couponsleft is a number and then add 25
-    
-  //        user.couponsleft += 25;
-     
-  
-  //     // Save the updated user
-  //     user = await user.save();
-  
-  //     return res.json(user);
-  //   } catch (err) {
-  //     console.error(err);
-  //     return res.status(500).json({ error: 'Internal server error' });
-  //   }
-  // });
 
   settingsRouter.put('/api/change-food-type/:psNumber', async (req, res) => {
     const { foodType} = req.body;
