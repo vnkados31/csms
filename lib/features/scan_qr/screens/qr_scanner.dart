@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:csm_system/common/widgets/custom_button.dart';
 import 'package:csm_system/features/scan_qr/screens/snacks_result.dart';
 import 'package:csm_system/features/scan_qr/services/qr_scanner_services.dart';
@@ -66,9 +65,11 @@ class _QrScannerState extends State<QrScanner> {
         date: date1);
   }
 
-  Future<void> deductCoupons(int psNumber, int totalUsers) async {
-    qrscannerServices.deductCoupons(
+  Future<bool> deductCoupons(int psNumber, int totalUsers) async {
+    Future<bool> result = qrscannerServices.deductCoupons(
         context: context, psNumber: psNumber, totalUsers: totalUsers);
+
+    return result;
   }
 
   // Replace with the user's date
@@ -266,9 +267,7 @@ class _QrScannerState extends State<QrScanner> {
                               int.parse(code1[2].toString()), formatter);
 
                           // if (sufficientCoupons && !alreadyScanned) {
-                          if (userScannedorNot ||
-                              int.parse(code1[6].toString()) >
-                                  int.parse(code1[7].toString())) {
+                          if (userScannedorNot) {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -276,17 +275,28 @@ class _QrScannerState extends State<QrScanner> {
                                           closeScreen: closeScreen,
                                         )));
                           } else {
-                            await addUserInList(code, user.psNumber, formatter);
-
-                            await deductCoupons(int.parse(code1[2].toString()),
+                            bool result = await deductCoupons(
+                                int.parse(code1[2].toString()),
                                 int.parse(code1[6].toString()));
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ResultScreen(
-                                          closeScreen: closeScreen,
-                                          code: code,
-                                        )));
+
+                            if (result) {
+                              await addUserInList(
+                                  code, user.psNumber, formatter);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ResultScreen(
+                                            closeScreen: closeScreen,
+                                            code: code,
+                                          )));
+                            } else {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => NoSufficientCoupons(
+                                            closeScreen: closeScreen,
+                                          )));
+                            }
                           }
                         }
                       }

@@ -59,7 +59,7 @@ class QrScannerServices {
     }
   }
 
-  void deductCoupons(
+  Future<bool> deductCoupons(
       {required BuildContext context,
       required int psNumber,
       required int totalUsers}) async {
@@ -82,8 +82,14 @@ class QrScannerServices {
           showSnackBar(context, "Coupons deducted successfully");
         },
       );
+
+      if (res.statusCode == 200) {
+        return true;
+      }
+      return false;
     } catch (e) {
-      showSnackBar(context, e.toString());
+      // showSnackBar(context, e.toString());
+      return false;
     }
   }
 

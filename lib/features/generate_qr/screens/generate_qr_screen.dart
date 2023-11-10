@@ -130,6 +130,7 @@ class _GenerateQrScreenState extends State<GenerateQrScreen> {
 
       if (dietData) {
         dropdownItems.addAll([
+          
           const DropdownMenuItem<UserDiet>(
             value: UserDiet.diet,
             child: Center(child: Text('Diet')),
@@ -151,7 +152,6 @@ class _GenerateQrScreenState extends State<GenerateQrScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(height: screenHeight * 0.05),
                   const Text(
                     'Select Users',
                     style: TextStyle(

@@ -63,9 +63,8 @@ settingsRouter.post('/api/change-food-type', async (req, res) => {
   
     try {
       const user = await User.findOne({ psNumber: psNumber });
-  
-      if (!user) {
-        return res.status(404).json({ error: 'User not found' });
+        if (!user) {
+        return res.status(400).json({ error: 'User not found' });
       }
   
       if (user.couponsLeft < couponsToDeduct) {
