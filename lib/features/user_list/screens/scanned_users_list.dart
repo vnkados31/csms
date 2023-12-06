@@ -25,7 +25,7 @@ class _ScannedUsersListState extends State<ScannedUsersList> {
   }
 
   fetchAllScannedUsers(int psNumber) async {
-    final now = new DateTime.now();
+    final now = DateTime.now();
     String formatter = DateFormat('yMd').format(now);
     scannedUsers = await adminServices.fetchAllScannedUsers(
         context, psNumber, formatter.toString());
@@ -44,7 +44,7 @@ class _ScannedUsersListState extends State<ScannedUsersList> {
             appBar: AppBar(
               centerTitle: true,
               title: const Text(
-                'Settings',
+                'Scanned Users',
                 style: TextStyle(fontSize: 25),
               ),
             ),

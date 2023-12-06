@@ -47,8 +47,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                width: 150,
-                height: 150,
+                width: 100,
+                height: 100,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(100),
                   child: Image.asset('asset/images/person.png'),

@@ -1,3 +1,4 @@
+import 'package:csm_system/common/widgets/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -24,13 +25,21 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  bool isLoading = true;
   // This widget is the root of your application.
 
   final AuthService authService = AuthService();
   @override
   void initState() {
     super.initState();
+    loadUserData();
+  }
+
+  Future<void> loadUserData() async {
     authService.getUserData(context);
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -48,9 +57,11 @@ class _MyAppState extends State<MyApp> {
                 color: Colors.black,
               ))),
       onGenerateRoute: (settings) => generateRoute(settings),
-      home: Provider.of<UserProvider>(context).user.token.isNotEmpty
-          ? const BottomBar()
-          : const AuthScreen(),
+      home: isLoading
+          ? const Loader() // Show loading indicator while data is loading
+          : Provider.of<UserProvider>(context).user.token.isNotEmpty
+              ? const BottomBar()
+              : const AuthScreen(),
     );
   }
 }
