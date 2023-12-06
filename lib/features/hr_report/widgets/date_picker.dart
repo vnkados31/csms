@@ -34,8 +34,8 @@ class _DatePickerExampleState extends State<DatePickerExample> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           Text(
-            DateFormat('yyyy-MM-dd').format(widget.selectedDate),
-            style: const TextStyle(fontSize: 25),
+            DateFormat('dd-MM-yyyy').format(widget.selectedDate),
+            style: const TextStyle(fontSize: 20),
           ),
           const SizedBox(
             width: 20.0,

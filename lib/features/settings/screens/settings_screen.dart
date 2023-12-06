@@ -114,7 +114,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               radius: 50,
                               backgroundColor: Colors.transparent,
                             ),
-                            const SizedBox(width: 20),
+                            const SizedBox(width: 10),
                             // Add some space between the picture and details
                             // User Details (Name and ID) in a Column
                             Column(

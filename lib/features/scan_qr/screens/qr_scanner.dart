@@ -125,15 +125,13 @@ class _QrScannerState extends State<QrScanner> {
   }
 
   Future<void> addUserInSnacksList(
-      String data, int scannedBy, String date1) async {
-    List<String> code = data.split(" ");
-
+      List<String> data, int scannedBy, String date1) async {
     // print("personname ${code[0].toString()}");
 
     snacksQrScannerServices.addToSnacksList(
       context: context,
-      name: code[0].toString(),
-      psNumber: int.parse(code[2].toString()),
+      name: data[0].toString(),
+      psNumber: int.parse(data[2].toString()),
       scannedBy: scannedBy,
       date: date1,
     );
@@ -242,6 +240,9 @@ class _QrScannerState extends State<QrScanner> {
                           bool userScannedorNot = await snacksScannedUser(
                               int.parse(code1[2].toString()), formatter);
 
+                          print("psNumber - ${code1[2].toString()}");
+                          print("date - ${formatter}");
+
                           // if (sufficientCoupons && !alreadyScanned) {
                           if (userScannedorNot) {
                             Navigator.push(
@@ -252,7 +253,7 @@ class _QrScannerState extends State<QrScanner> {
                                         )));
                           } else {
                             await addUserInSnacksList(
-                                code, user.psNumber, formatter);
+                                code1, user.psNumber, formatter);
 
                             Navigator.push(
                                 context,

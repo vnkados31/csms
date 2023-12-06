@@ -91,7 +91,9 @@ class _BottomBarState extends State<BottomBar> {
                   'Profile',
                   'Settings',
                   // 'Analytics',
-                  if (user.userType == 'admin' || user.userType == 'officeBoy')
+                  if (user.userType == 'admin' ||
+                      user.userType == 'officeBoy' ||
+                      user.userType == 'super_admin')
                     'QrScanner',
                   if (user.userType == 'super_admin' || user.userType == 'hr')
                     'HR Report',
