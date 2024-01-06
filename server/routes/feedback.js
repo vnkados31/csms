@@ -7,18 +7,27 @@ feedbackRouter.post('/api/sendfeedback', async (req, res) => {
   try {
     const { feedText, ratingText, psNumber, today } = req.body;
 
-    // Check if feedback already exists for the same psNumber and today
-    const existingFeedback = await Feedback.findOne({ today, psNumber });
+    // Check if feedback already exists for the same psNumber and date
+    const existingFeedback = await Feedback.findOne({
+      'today': today,
+      'feedbacks': {
+        $elemMatch: {
+          'psNumber': psNumber
+        }
+      }
+    });
 
     if (existingFeedback) {
       return res.status(422).json("Already Submitted Feedback");
     }
 
     const feedback = new Feedback({
-      feedText,
-      ratingText,
-      psNumber,
       today,
+      feedbacks: [{
+        feedText,
+        ratingText,
+        psNumber,
+      }],
     });
 
     await feedback.save(); // Save the new feedback
@@ -28,5 +37,7 @@ feedbackRouter.post('/api/sendfeedback', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+
 
 module.exports = feedbackRouter;
