@@ -67,6 +67,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                   });
 
                   addMenuItem();
+                
                   loading = false;
 
                   widget.initFunction();

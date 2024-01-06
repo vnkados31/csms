@@ -94,19 +94,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       );
                     },
                     child: Container(
-                      width: MediaQuery.of(context).size.width * 0.95,
-                      height: MediaQuery.of(context).size.height * 0.20,
-                      margin: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(5),
                       child: Card(
                         color: Colors.white54,
-                        elevation: 20,
+                        elevation: 10,
                         shadowColor: Colors.cyanAccent,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Row(
                           children: [
-                            const SizedBox(width: 20),
+                            const SizedBox(width: 10),
                             // User Profile Picture
                             const CircleAvatar(
                               backgroundImage:
@@ -124,12 +122,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 Text(
                                   'Name: ${user.name}',
                                   style: const TextStyle(fontSize: 25),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                                 const SizedBox(height: 16),
                                 // Add some space between the name and ID
                                 Text(
                                   'PS No.: ${user.psNumber}',
                                   style: const TextStyle(fontSize: 25),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ],
                             ),
