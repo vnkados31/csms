@@ -2,6 +2,7 @@ import 'package:csm_system/features/generate_qr/screens/generate_qr_screen.dart'
 import 'package:csm_system/features/hr_report/screens/hr_report_download.dart';
 import 'package:csm_system/features/menu/screens/menu_screen.dart';
 import 'package:csm_system/features/notification/screens/notification_screen.dart';
+import 'package:csm_system/features/reports/screens/reports_common_screen.dart';
 import 'package:csm_system/features/scan_qr/screens/qr_scanner.dart';
 import 'package:csm_system/features/settings/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
@@ -67,7 +68,13 @@ class _BottomBarState extends State<BottomBar> {
           context,
           MaterialPageRoute(builder: (context) => const HrReportDownload()),
         );
-        break;
+
+      // case 'Reports':
+      //   Navigator.push(
+      //     context,
+      //     MaterialPageRoute(builder: (context) => const ReportsCommonScreen()),
+      //   );
+      //   break;
       case 'LogOut':
         AuthService().logoutUser(context);
         break;

@@ -127,6 +127,40 @@ class QrScannerServices {
     return scannedUsersList;
   }
 
+  Future<List<Qrmodel>> fetchAllSnacksScannedUsers(
+      BuildContext context, int psNumber, String day) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    List<Qrmodel> scannedUsersList = [];
+    try {
+      http.Response res = await http.post(
+          Uri.parse('$uri/snacks/get-scanned-snacks'),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-auth-token': userProvider.user.token,
+          },
+          body: jsonEncode({'scannedBy': psNumber, 'date': day.toString()}));
+
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () {
+          for (int i = 0; i < jsonDecode(res.body).length; i++) {
+            scannedUsersList.add(
+              Qrmodel.fromJson(
+                jsonEncode(
+                  jsonDecode(res.body)[i],
+                ),
+              ),
+            );
+          }
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+    return scannedUsersList;
+  }
+
 // here onSuccess callback method will help us in deleting product
 
   void deleteScannedUser(

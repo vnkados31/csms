@@ -36,7 +36,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> loadUserData() async {
-    authService.getUserData(context);
+    await authService.getUserData(context);
     setState(() {
       isLoading = false;
     });

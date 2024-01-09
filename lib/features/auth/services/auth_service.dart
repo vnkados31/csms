@@ -99,7 +99,7 @@ class AuthService {
   }
 
 //get user data
-  void getUserData(
+  Future<void> getUserData(
     BuildContext context,
   ) async {
     try {

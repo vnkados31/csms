@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../../common/widgets/loader.dart';
 import '../../../providers/user_provider.dart';
+import '../../generate_qr/services/check_snacks_time.dart';
 
 class ScannedUsersList extends StatefulWidget {
   static const String routeName = '/scanned-users';
@@ -18,10 +19,13 @@ class _ScannedUsersListState extends State<ScannedUsersList> {
   List<Qrmodel>? scannedUsers;
   List<Qrmodel>? filteredItems;
   final QrScannerServices adminServices = QrScannerServices();
+  final CheckSnacksTime checkSnacksTime = CheckSnacksTime();
+  late bool isSnacksTime = false;
 
   @override
   void initState() {
     super.initState();
+    isSnacksTime = checkSnacksTime.checkSnacksTime();
   }
 
   fetchAllScannedUsers(int psNumber) async {
@@ -32,11 +36,23 @@ class _ScannedUsersListState extends State<ScannedUsersList> {
     setState(() {});
   }
 
+  fetchAllSnacksScannedUsers(int psNumber) async {
+    final now = DateTime.now();
+    String formatter = DateFormat('yMd').format(now);
+    scannedUsers = await adminServices.fetchAllSnacksScannedUsers(
+        context, psNumber, formatter.toString());
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).user;
 
-    fetchAllScannedUsers(user.psNumber);
+    if (isSnacksTime) {
+      fetchAllSnacksScannedUsers(user.psNumber);
+    } else {
+      fetchAllScannedUsers(user.psNumber);
+    }
 
     return scannedUsers == null
         ? const Loader()
@@ -69,28 +85,28 @@ class _ScannedUsersListState extends State<ScannedUsersList> {
                                 ),
                               ),
                             ),
-                            Text(
+                            if(!isSnacksTime)Text(
                               'Total Users: ${filteredUserData.totalUsers}',
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 24,
                               ),
                             ),
-                            Text(
+                            if(!isSnacksTime) Text(
                               'Veg Users: ${filteredUserData.vegUsers}',
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 24,
                               ),
                             ),
-                            Text(
+                            if(!isSnacksTime)Text(
                               'Non-Veg Users: ${filteredUserData.nonVegUsers}',
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 24,
                               ),
                             ),
-                            Text(
+                            if(!isSnacksTime) Text(
                               'Diet Users: ${filteredUserData.dietUsers}',
                               style: const TextStyle(
                                 color: Colors.black,

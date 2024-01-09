@@ -107,4 +107,3 @@ hrrouter.post('/hr/save-user', async (req, res) => {
   });
 
   module.exports = hrrouter;
-
