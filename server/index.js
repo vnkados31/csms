@@ -8,6 +8,7 @@ const settingsRouter = require('./routes/settings');
 const feedbackRouter = require('./routes/feedback');
 const hrrouter = require('./routes/hrreport');
 const snacksRouter = require('./routes/snacks');
+const countRouter = require('./routes/getcount');
 
 const PORT = 3000;
 const app = express();
@@ -21,6 +22,7 @@ app.use(settingsRouter);
 app.use(feedbackRouter);
 app.use(hrrouter);
 app.use(snacksRouter);
+app.use(countRouter);
 
 //app.use(/.netlify/server/index);
 
@@ -31,7 +33,7 @@ mongoose.connect(DB).then( () => {
     console.log(e);
 })
 
-app.listen(PORT,"0.0.0.0", () => {
+app.listen(PORT,"125.99.108.76", () => {
     console.log(`Connected at port ${PORT}`);
 })
 

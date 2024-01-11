@@ -23,13 +23,6 @@ hrrouter.post('/hr/generate-report-and-send-email', async (req, res) => {
       date: { $gte: date1, $lte: date2 },
     });
 
-    // Calculate the count of couponsBook entries for each psNumber
-    const entriesByPsNumber = entries.reduce((acc, entry) => {
-      const psNumber = entry.psNumber;
-      acc[psNumber] = (acc[psNumber] || 0) + 1;
-      return acc;
-    }, {});
-
     // Create an Excel file
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('CouponsBook Data');

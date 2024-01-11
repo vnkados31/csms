@@ -69,12 +69,12 @@ class _BottomBarState extends State<BottomBar> {
           MaterialPageRoute(builder: (context) => const HrReportDownload()),
         );
 
-      // case 'Reports':
-      //   Navigator.push(
-      //     context,
-      //     MaterialPageRoute(builder: (context) => const ReportsCommonScreen()),
-      //   );
-      //   break;
+      case 'Reports':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const ReportsCommonScreen()),
+        );
+        break;
       case 'LogOut':
         AuthService().logoutUser(context);
         break;
@@ -104,6 +104,10 @@ class _BottomBarState extends State<BottomBar> {
                     'QrScanner',
                   if (user.userType == 'super_admin' || user.userType == 'hr')
                     'HR Report',
+                  if (user.userType == 'super_admin' ||
+                      user.userType == 'hr' ||
+                      user.userType == 'admin')
+                    'Reports',
                   'LogOut'
                 }.map((String choice) {
                   return PopupMenuItem<String>(

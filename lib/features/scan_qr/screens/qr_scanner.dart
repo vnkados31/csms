@@ -234,14 +234,14 @@ class _QrScannerState extends State<QrScanner> {
                         isScanCompleted = true;
 
                         final now = DateTime.now();
-                        String formatter = DateFormat('yMd').format(now);
+                        String formatter = DateFormat('yyyy-MM-dd').format(now);
 
                         if (isSnacksTime) {
                           bool userScannedorNot = await snacksScannedUser(
                               int.parse(code1[2].toString()), formatter);
 
-                          print("psNumber - ${code1[2].toString()}");
-                          print("date - ${formatter}");
+                          // print("psNumber - ${code1[2].toString()}");
+                          // print("date - ${formatter}");
 
                           // if (sufficientCoupons && !alreadyScanned) {
                           if (userScannedorNot) {

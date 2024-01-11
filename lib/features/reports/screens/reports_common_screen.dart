@@ -1,13 +1,9 @@
 import 'package:csm_system/common/widgets/custom_button.dart';
-import 'package:csm_system/features/hr_report/services/hr_services.dart';
 import 'package:csm_system/features/hr_report/widgets/date_picker.dart';
-import 'package:csm_system/features/reports/services/hr_report_services.dart';
+import 'package:csm_system/features/reports/screens/analytics_screen.dart';
+import 'package:csm_system/features/reports/screens/snacks_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-
-import '../../../constants/utils.dart';
-import '../../../providers/user_provider.dart';
 
 class ReportsCommonScreen extends StatefulWidget {
   const ReportsCommonScreen({super.key});
@@ -20,9 +16,9 @@ class _ReportsCommonScreenState extends State<ReportsCommonScreen> {
   DateTime selectedDate1 = DateTime.now();
   DateTime selectedDate2 = DateTime.now();
   String selectedReportType =
-      'CouponBookReport'; // Initial value for the dropdown
+      'LunchScannedUserReport'; // Initial value for the dropdown
 
- // final HrReportServices hrReportServices = HrReportServices();
+  // final HrReportServices hrReportServices = HrReportServices();
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +41,6 @@ class _ReportsCommonScreenState extends State<ReportsCommonScreen> {
               child: DropdownButton<String>(
                 value: selectedReportType,
                 items: <String>[
-                  'CouponBookReport',
                   'LunchScannedUserReport',
                   'SnacksScannedUserReport'
                 ].map((String value) {
@@ -103,6 +98,27 @@ class _ReportsCommonScreenState extends State<ReportsCommonScreen> {
                 //     showSnackBar(context, 'Report Downloaded Successfull!');
                 //   },
                 // );
+                if (selectedReportType == 'LunchScannedUserReport') {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => MyAnalytics(
+                            date1:
+                                DateFormat('yyyy-MM-dd').format(selectedDate1),
+                            date2: DateFormat('yyyy-MM-dd')
+                                .format(selectedDate2))),
+                  );
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SnacksScannedUsersCountScreen(
+                            date1:
+                                DateFormat('yyyy-MM-dd').format(selectedDate1),
+                            date2: DateFormat('yyyy-MM-dd')
+                                .format(selectedDate2))),
+                  );
+                }
               },
             ),
           ],

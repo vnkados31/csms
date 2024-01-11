@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-String uri = 'http://192.168.207.146:3000';
+String uri = 'http://125.99.108.76:3000';
 
 //final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
